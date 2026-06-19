@@ -26,7 +26,7 @@
                             @elseif($item->status == 'Sedang Dikirim')
                                 <span class="text-blue-600 text-xs font-black uppercase tracking-widest">Sedang Dikirim</span>
                             @elseif($item->status == 'Selesai')
-                                <span class="text-emerald-600 text-xs font-black uppercase tracking-widest">Selesai</span>
+                                <span class="text-emerald-600 text-xs font-black uppercase tracking-widest">Transaksi Selesai</span>
                             @else
                                 <span class="text-gray-600 text-xs font-black uppercase tracking-widest">{{ $item->status }}</span>
                             @endif

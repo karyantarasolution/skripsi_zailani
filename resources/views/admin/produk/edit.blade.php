@@ -53,10 +53,11 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Satuan Ukuran</label>
-                                <select name="satuan" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm">
-                                    <option value="m" {{ $produk->satuan == 'm' ? 'selected' : '' }}>Meter (m)</option>
-                                    <option value="mm" {{ $produk->satuan == 'mm' ? 'selected' : '' }}>Milimeter (mm)</option>
-                                </select>
+                                    <select name="satuan" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm">
+                                        <option value="m" {{ $produk->satuan == 'm' ? 'selected' : '' }}>Meter (m)</option>
+                                        <option value="cm" {{ $produk->satuan == 'cm' ? 'selected' : '' }}>Centimeter (cm)</option>
+                                        <option value="mm" {{ $produk->satuan == 'mm' ? 'selected' : '' }}>Milimeter (mm)</option>
+                                    </select>
                                 <p class="text-[10px] text-gray-400 mt-1 font-bold italic">Pelanggan akan memasukkan dimensi dalam satuan ini.</p>
                             </div>
                             <div>

@@ -8,14 +8,10 @@
         lebar: '', 
         jumlah: 1, 
         hargaDasar: {{ $produk->harga_dasar }},
-        satuan: '{{ $produk->satuan }}',
         get total() {
             let p = parseFloat(this.panjang) || 0;
             let l = parseFloat(this.lebar) || 0;
             let j = parseInt(this.jumlah) || 1;
-            if (this.satuan === 'mm') {
-                return (p / 1000) * (l / 1000) * this.hargaDasar * j;
-            }
             return p * l * this.hargaDasar * j;
         }
     }">
@@ -29,7 +25,7 @@
                         
                         <div class="mt-8 w-full p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
                             <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Harga Estimasi Dasar</p>
-                            <p class="text-2xl font-black text-gray-950">Rp {{ number_format($produk->harga_dasar, 0, ',', '.') }}<span class="text-xs text-gray-400 font-bold">/m²</span><br><span class="text-[9px] text-indigo-400 font-bold">(satuan: {{ $produk->satuan == 'mm' ? 'Milimeter' : 'Meter' }})</span></p>
+                            <p class="text-2xl font-black text-gray-950">Rp {{ number_format($produk->harga_dasar, 0, ',', '.') }}<span class="text-xs text-gray-400 font-bold">/m²</span><br><span class="text-[9px] text-indigo-400 font-bold">(satuan: {{ $produk->satuan == 'cm' ? 'Centimeter' : ($produk->satuan == 'mm' ? 'Milimeter' : 'Meter') }})</span></p>
                         </div>
 
                         <div class="mt-4 w-full p-5 bg-indigo-600 rounded-2xl shadow-lg transform scale-105 border-2 border-indigo-400">
@@ -57,14 +53,18 @@
                             @csrf
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @php
+                                    $satuanLabel = match($produk->satuan) { 'cm' => 'Centimeter', 'mm' => 'Milimeter', default => 'Meter' };
+                                    $step = $produk->satuan == 'mm' ? '1' : '0.01';
+                                @endphp
                                 <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Panjang ({{ $produk->satuan == 'mm' ? 'Milimeter' : 'Meter' }})</label>
-                                    <input type="number" step="{{ $produk->satuan == 'mm' ? '1' : '0.01' }}" name="panjang" x-model="panjang" required class="w-full rounded-2xl border-gray-200 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-black text-lg p-4 @error('panjang') border-red-300 bg-red-50 @enderror" placeholder="0.00">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Panjang ({{ $satuanLabel }})</label>
+                                    <input type="number" step="{{ $step }}" name="panjang" x-model="panjang" required class="w-full rounded-2xl border-gray-200 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-black text-lg p-4 @error('panjang') border-red-300 bg-red-50 @enderror" placeholder="0.00">
                                     @error('panjang') <p class="text-red-600 text-xs font-bold mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Lebar ({{ $produk->satuan == 'mm' ? 'Milimeter' : 'Meter' }})</label>
-                                    <input type="number" step="{{ $produk->satuan == 'mm' ? '1' : '0.01' }}" name="lebar" x-model="lebar" required class="w-full rounded-2xl border-gray-200 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-black text-lg p-4 @error('lebar') border-red-300 bg-red-50 @enderror" placeholder="0.00">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Lebar ({{ $satuanLabel }})</label>
+                                    <input type="number" step="{{ $step }}" name="lebar" x-model="lebar" required class="w-full rounded-2xl border-gray-200 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-black text-lg p-4 @error('lebar') border-red-300 bg-red-50 @enderror" placeholder="0.00">
                                     @error('lebar') <p class="text-red-600 text-xs font-bold mt-1">{{ $message }}</p> @enderror
                                 </div>
                             </div>

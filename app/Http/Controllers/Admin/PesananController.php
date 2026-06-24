@@ -49,10 +49,15 @@ class PesananController extends Controller
 
         if (($statusBaru == 'Produksi' || $statusBaru == 'Selesai') && ($statusLama != 'Produksi' && $statusLama != 'Selesai')) {
             foreach ($pesanan->detailPesanan as $item) {
+                $pembagi = match($item->produk->satuan) {
+                    'mm' => 1000,
+                    'cm' => 100,
+                    default => 1,
+                };
+                $luasM2 = ($item->panjang / $pembagi) * ($item->lebar / $pembagi);
                 foreach ($item->produk->bahanBaku as $bahan) {
-                    $luas = $item->panjang * $item->lebar;
                     $penggunaan = ($bahan->pivot->tipe_pengurangan == 'per_meter') 
-                                  ? ($luas * $bahan->pivot->jumlah_digunakan * $item->jumlah) 
+                                  ? ($luasM2 * $bahan->pivot->jumlah_digunakan * $item->jumlah) 
                                   : ($bahan->pivot->jumlah_digunakan * $item->jumlah);
 
                     $stok_sebelum = $bahan->stok;
@@ -75,10 +80,15 @@ class PesananController extends Controller
 
         if ($statusBaru == 'Dibatalkan' && ($statusLama == 'Produksi' || $statusLama == 'Selesai')) {
             foreach ($pesanan->detailPesanan as $item) {
+                $pembagi = match($item->produk->satuan) {
+                    'mm' => 1000,
+                    'cm' => 100,
+                    default => 1,
+                };
+                $luasM2 = ($item->panjang / $pembagi) * ($item->lebar / $pembagi);
                 foreach ($item->produk->bahanBaku as $bahan) {
-                    $luas = $item->panjang * $item->lebar;
                     $penggunaan = ($bahan->pivot->tipe_pengurangan == 'per_meter') 
-                                  ? ($luas * $bahan->pivot->jumlah_digunakan * $item->jumlah) 
+                                  ? ($luasM2 * $bahan->pivot->jumlah_digunakan * $item->jumlah) 
                                   : ($bahan->pivot->jumlah_digunakan * $item->jumlah);
 
                     $stok_sebelum = $bahan->stok;
@@ -206,7 +216,20 @@ class PesananController extends Controller
             ->whereIn('pesanan.status', ['Produksi', 'Siap Ambil', 'Sedang Dikirim', 'Selesai'])
             ->selectRaw('bahan_baku.nama_bahan, bahan_baku.satuan,
                 SUM(CASE 
-                    WHEN produk_bahan.tipe_pengurangan = "per_meter" THEN (detail_pesanan.panjang * detail_pesanan.lebar * produk_bahan.jumlah_digunakan * detail_pesanan.jumlah)
+                    WHEN produk_bahan.tipe_pengurangan = "per_meter" 
+                    THEN (
+                        (CASE 
+                            WHEN produk.satuan = "cm" THEN detail_pesanan.panjang / 100.0
+                            WHEN produk.satuan = "mm" THEN detail_pesanan.panjang / 1000.0
+                            ELSE detail_pesanan.panjang
+                        END) *
+                        (CASE 
+                            WHEN produk.satuan = "cm" THEN detail_pesanan.lebar / 100.0
+                            WHEN produk.satuan = "mm" THEN detail_pesanan.lebar / 1000.0
+                            ELSE detail_pesanan.lebar
+                        END) *
+                        produk_bahan.jumlah_digunakan * detail_pesanan.jumlah
+                    )
                     ELSE (produk_bahan.jumlah_digunakan * detail_pesanan.jumlah)
                 END) as total_pemakaian')
             ->groupBy('bahan_baku.nama_bahan', 'bahan_baku.satuan')

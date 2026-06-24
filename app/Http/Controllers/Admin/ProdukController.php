@@ -31,7 +31,7 @@ class ProdukController extends Controller
             'deskripsi' => 'nullable|string',
             'bahan_baku_id' => 'required|exists:bahan_baku,id',
             'harga_dasar' => 'required|numeric|min:0',
-            'satuan' => 'required|in:m,mm',
+            'satuan' => 'required|in:m,cm,mm',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -69,7 +69,7 @@ class ProdukController extends Controller
             'deskripsi' => 'nullable|string',
             'bahan_baku_id' => 'required|exists:bahan_baku,id',
             'harga_dasar' => 'required|numeric|min:0',
-            'satuan' => 'required|in:m,mm',
+            'satuan' => 'required|in:m,cm,mm',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 

@@ -166,9 +166,12 @@
                                     <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 bg-indigo-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     </div>
+                                    @php
+                                        $isCash = str_contains($pesanan->metode_pengiriman, 'Cash');
+                                    @endphp
                                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ in_array($pesanan->status, ['Verifikasi', 'Antrean Cetak', 'Produksi', 'Selesai']) ? 'bg-indigo-600 border-indigo-500 shadow-lg shadow-indigo-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }}">
                                         <h4 class="font-black text-sm uppercase">Verifikasi Kasir</h4>
-                                        <p class="text-[10px] text-indigo-200 mt-1">Mengecek bukti transfer Anda.</p>
+                                        <p class="text-[10px] text-indigo-200 mt-1">{{ $isCash ? 'Pesanan langsung diproses (Cash).' : 'Mengecek bukti transfer Anda.' }}</p>
                                     </div>
                                 </div>
 

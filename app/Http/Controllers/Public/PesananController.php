@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\DetailPesanan;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvoicePesananMail;
@@ -21,8 +22,8 @@ class PesananController extends Controller
 {
 public function show(Produk $produk)
 {
-    // Mengirim variabel $produk, bukan $pesanan
-    return view('pesanan.show', compact('produk'));
+    $detailKeranjang = null;
+    return view('pesanan.show', compact('produk', 'detailKeranjang'));
 }
 
     public function addToCart(Request $request, Produk $produk)
@@ -73,6 +74,77 @@ public function show(Produk $produk)
         return view('pesanan.cart', compact('keranjang'));
     }
 
+    public function editCartItem(DetailKeranjang $detailKeranjang)
+    {
+        if ($detailKeranjang->keranjang->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $produk = $detailKeranjang->produk;
+        return view('pesanan.show', compact('produk', 'detailKeranjang'));
+    }
+
+    public function updateCartItem(Request $request, DetailKeranjang $detailKeranjang)
+    {
+        if ($detailKeranjang->keranjang->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $produk = $detailKeranjang->produk;
+        $minDim = $produk->satuan === 'mm' ? 1 : 0.01;
+
+        $request->validate([
+            'panjang' => 'required|numeric|min:' . $minDim,
+            'lebar' => 'required|numeric|min:' . $minDim,
+            'jumlah' => 'required|integer|min:1',
+            'file_desain' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+        ]);
+
+        try {
+            $pathDesain = $detailKeranjang->file_desain;
+            if ($request->hasFile('file_desain')) {
+                if ($detailKeranjang->file_desain) {
+                    Storage::disk('public')->delete($detailKeranjang->file_desain);
+                }
+                $pathDesain = $request->file('file_desain')->store('desain_pesanan', 'public');
+            }
+
+            $subtotal = $request->panjang * $request->lebar * $produk->harga_dasar * $request->jumlah;
+
+            $detailKeranjang->update([
+                'panjang' => $request->panjang,
+                'lebar' => $request->lebar,
+                'jumlah' => $request->jumlah,
+                'subtotal' => $subtotal,
+                'file_desain' => $pathDesain,
+                'catatan' => $request->catatan,
+            ]);
+
+            return redirect()->route('keranjang.index')->with('success', 'Item keranjang berhasil diperbarui!');
+        } catch (\Exception $e) {
+            Log::error('Gagal update keranjang: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
+        }
+    }
+
+    public function destroyCartItem(DetailKeranjang $detailKeranjang)
+    {
+        if ($detailKeranjang->keranjang->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        try {
+            if ($detailKeranjang->file_desain) {
+                Storage::disk('public')->delete($detailKeranjang->file_desain);
+            }
+            $detailKeranjang->delete();
+            return redirect()->route('keranjang.index')->with('success', 'Item berhasil dihapus dari keranjang!');
+        } catch (\Exception $e) {
+            Log::error('Gagal hapus item keranjang: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
+        }
+    }
+
     public function checkout()
     {
         $keranjang = Keranjang::with('detailKeranjang.produk')
@@ -101,10 +173,14 @@ public function show(Produk $produk)
  public function storeCheckout(Request $request)
     {
         $request->validate([
-            'bank_tujuan' => 'required|string',
-            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'metode_pembayaran' => 'required|string',
+            'bukti_bayar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'metode_pengiriman' => 'required|string|in:Ambil di Toko,Kurir Lokal',
         ]);
+
+        if ($request->metode_pembayaran !== 'Cash' && !$request->hasFile('bukti_bayar')) {
+            return back()->withErrors(['bukti_bayar' => 'Bukti bayar wajib diupload untuk pembayaran transfer.'])->withInput();
+        }
 
         $keranjang = Keranjang::with('detailKeranjang.produk')->where('user_id', Auth::id())->where('status', 'aktif')->first();
         
@@ -117,7 +193,10 @@ public function show(Produk $produk)
         }
         $total_bayar = $total_harga - $potongan_diskon;
 
-        $pathBukti = $request->file('bukti_bayar')->store('bukti_pembayaran', 'public');
+        $pathBukti = null;
+        if ($request->hasFile('bukti_bayar')) {
+            $pathBukti = $request->file('bukti_bayar')->store('bukti_pembayaran', 'public');
+        }
 
         $pesanan = Pesanan::create([
             'user_id' => Auth::id(),
@@ -125,9 +204,9 @@ public function show(Produk $produk)
             'total_harga' => $total_harga,
             'potongan_diskon' => $potongan_diskon,
             'total_bayar' => $total_bayar,
-            'metode_pengiriman' => $request->metode_pengiriman . ' | Bayar via: ' . $request->bank_tujuan,
+            'metode_pengiriman' => $request->metode_pengiriman . ' | Bayar via: ' . $request->metode_pembayaran,
             'bukti_bayar' => $pathBukti,
-            'status' => 'Verifikasi',
+            'status' => $request->metode_pembayaran === 'Cash' ? 'Antrean Cetak' : 'Verifikasi',
         ]);
 
         foreach ($keranjang->detailKeranjang as $detail) {
@@ -158,13 +237,17 @@ public function show(Produk $produk)
             $totalFormat = 'Rp ' . number_format($pesanan->total_bayar, 0, ',', '.');
             $items = $keranjang->detailKeranjang->map(fn($d) => ($d->produk->nama_produk ?? 'Produk') . ' (' . $d->jumlah . ' pcs)')->join(', ');
 
+            $paymentNote = $request->metode_pembayaran === 'Cash'
+                ? "Pembayaran: Cash (Langsung di toko)\n\nSegera proses pesanan di panel admin!"
+                : "Segera verifikasi pembayaran di panel admin!";
+
             $message = "*PESANAN BARU* 🖨️\n\n"
                 . "Invoice: " . $pesanan->nomor_invoice . "\n"
                 . "Pelanggan: " . Auth::user()->name . "\n"
                 . "Item: " . $items . "\n"
                 . "Total: " . $totalFormat . "\n"
                 . "Pengiriman: " . $pesanan->metode_pengiriman . "\n\n"
-                . "Segera verifikasi pembayaran di panel admin!\n"
+                . $paymentNote . "\n"
                 . url('/admin/pesanan/' . $pesanan->id);
 
             foreach ($adminList as $admin) {
@@ -176,7 +259,10 @@ public function show(Produk $produk)
             Log::error('Gagal kirim WA notif ke admin: ' . $e->getMessage());
         }
 
-        return redirect()->route('pesanan.riwayat')->with('success', 'Pesanan berhasil dikirim & menunggu verifikasi Kasir! Invoice telah dikirim ke email Anda.');
+        $message = $request->metode_pembayaran === 'Cash'
+            ? 'Pesanan berhasil dikirim! Silakan lakukan pembayaran di kasir toko. Invoice telah dikirim ke email Anda.'
+            : 'Pesanan berhasil dikirim & menunggu verifikasi Kasir! Invoice telah dikirim ke email Anda.';
+        return redirect()->route('pesanan.riwayat')->with('success', $message);
     }
     // UPDATE fungsi riwayat agar memanggil detailPesanan
     public function riwayat()

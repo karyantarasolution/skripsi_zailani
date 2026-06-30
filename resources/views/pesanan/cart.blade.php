@@ -20,6 +20,7 @@
                                 <th class="px-8 py-4">Produk & Ukuran</th>
                                 <th class="px-8 py-4">Jumlah</th>
                                 <th class="px-8 py-4 text-right">Subtotal</th>
+                                <th class="px-8 py-4 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -32,6 +33,9 @@
                                             <div>
                                                 <span class="block font-black text-gray-950 uppercase italic leading-tight">{{ $detail->produk->nama_produk }}</span>
                                                 <span class="text-xs font-bold text-gray-400 italic">Ukuran: {{ $detail->panjang }}{{ $detail->produk->satuan ?? 'm' }} x {{ $detail->lebar }}{{ $detail->produk->satuan ?? 'm' }}</span>
+                                                @if($detail->catatan)
+                                                    <span class="text-[10px] font-bold text-indigo-500 block mt-1 italic">Catatan: {{ $detail->catatan }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -39,11 +43,25 @@
                                     <td class="px-8 py-6 text-right font-black text-gray-950 tracking-tight">
                                         Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
                                     </td>
+                                    <td class="px-8 py-6 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('keranjang.edit', $detail->id) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition" title="Edit">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                            </a>
+                                            <form action="{{ route('keranjang.destroy', $detail->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus item ini dari keranjang?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition" title="Hapus">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="3" class="px-8 py-20 text-center text-gray-400 italic font-bold uppercase tracking-widest">Keranjang kosong</td>
+                                    <td colspan="4" class="px-8 py-20 text-center text-gray-400 italic font-bold uppercase tracking-widest">Keranjang kosong</td>
                                 </tr>
                             @endif
                         </tbody>

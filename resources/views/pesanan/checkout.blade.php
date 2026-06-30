@@ -3,7 +3,7 @@
         <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight italic">Finalisasi Pembayaran</h2>
     </x-slot>
 
-    <div class="py-12" x-data="{ bank: 'Mandiri' }">
+    <div class="py-12" x-data="{ metode_pembayaran: 'Mandiri' }">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
@@ -39,15 +39,21 @@
                         </div>
                     </div>
 
-                    <div class="bg-indigo-950 p-8 rounded-3xl shadow-sm text-white border border-indigo-900 transition-all">
+                    <div x-show="metode_pembayaran !== 'Cash'" class="bg-indigo-950 p-8 rounded-3xl shadow-sm text-white border border-indigo-900 transition-all">
                         <h3 class="font-black uppercase mb-4 tracking-tighter text-indigo-200">Instruksi Transfer</h3>
-                        <p class="text-[10px] font-black uppercase mb-1 opacity-70" x-text="'Bank ' + bank"></p>
+                        <p class="text-[10px] font-black uppercase mb-1 opacity-70" x-text="'Bank ' + metode_pembayaran"></p>
                         <p class="font-black text-2xl tracking-wider" x-text="
-                            bank === 'Mandiri' ? '123-000-456-789' : 
-                            (bank === 'BCA' ? '0987-6543-21' : 
-                            (bank === 'BNI' ? '1122-3344-55' : '0011-2233-4455-667'))
+                            metode_pembayaran === 'Mandiri' ? '123-000-456-789' : 
+                            (metode_pembayaran === 'BCA' ? '0987-6543-21' : 
+                            (metode_pembayaran === 'BNI' ? '1122-3344-55' : '0011-2233-4455-667'))
                         "></p>
                         <p class="text-xs font-bold mt-1 uppercase opacity-90">A.N ORBIT DIGITAL PRINTING</p>
+                    </div>
+
+                    <div x-show="metode_pembayaran === 'Cash'" class="bg-emerald-600 p-8 rounded-3xl shadow-sm text-white border border-emerald-500 transition-all">
+                        <h3 class="font-black uppercase mb-2 tracking-tighter">Pembayaran Cash</h3>
+                        <p class="text-sm font-bold opacity-90">Bayar langsung di kasir toko setelah pesanan diproses.</p>
+                        <p class="text-[10px] font-black uppercase mt-4 opacity-70">Orbit Digital Printing - Banjarmasin</p>
                     </div>
                 </div>
 
@@ -74,39 +80,46 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Pilih Bank Tujuan</label>
+                            <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Metode Pembayaran</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="bank_tujuan" value="Mandiri" x-model="bank" class="peer sr-only" required>
+                                    <input type="radio" name="metode_pembayaran" value="Mandiri" x-model="metode_pembayaran" class="peer sr-only" required>
                                     <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
                                         <span class="font-black text-gray-900 uppercase">Mandiri</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="bank_tujuan" value="BCA" x-model="bank" class="peer sr-only" required>
+                                    <input type="radio" name="metode_pembayaran" value="BCA" x-model="metode_pembayaran" class="peer sr-only" required>
                                     <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
                                         <span class="font-black text-gray-900 uppercase">BCA</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="bank_tujuan" value="BNI" x-model="bank" class="peer sr-only" required>
+                                    <input type="radio" name="metode_pembayaran" value="BNI" x-model="metode_pembayaran" class="peer sr-only" required>
                                     <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
                                         <span class="font-black text-gray-900 uppercase">BNI</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="bank_tujuan" value="BRI" x-model="bank" class="peer sr-only" required>
+                                    <input type="radio" name="metode_pembayaran" value="BRI" x-model="metode_pembayaran" class="peer sr-only" required>
                                     <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
                                         <span class="font-black text-gray-900 uppercase">BRI</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer md:col-span-2">
+                                    <input type="radio" name="metode_pembayaran" value="Cash" x-model="metode_pembayaran" class="peer sr-only" required>
+                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        <span class="font-black text-gray-900 uppercase">Cash (Bayar di Tempat)</span>
                                     </div>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="space-y-2">
+                        <div x-show="metode_pembayaran !== 'Cash'" class="space-y-2">
                             <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Foto Struk / Screenshot</label>
                             <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-emerald-500 transition bg-gray-50/50">
-                                <input type="file" name="bukti_bayar" required accept="image/*" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-emerald-500 file:text-white hover:file:bg-emerald-600 cursor-pointer">
+                                <input type="file" name="bukti_bayar" accept="image/*" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-emerald-500 file:text-white hover:file:bg-emerald-600 cursor-pointer">
                             </div>
                         </div>
 

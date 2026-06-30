@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pesan/{produk}', [PesananController::class, 'show'])->name('pesan.show');
     Route::post('/pesan/{produk}/keranjang', [PesananController::class, 'addToCart'])->name('pesan.cart');
     Route::get('/keranjang', [PesananController::class, 'cartIndex'])->name('keranjang.index');
+    Route::delete('/keranjang/{detailKeranjang}', [PesananController::class, 'destroyCartItem'])->name('keranjang.destroy');
+    Route::get('/keranjang/{detailKeranjang}/edit', [PesananController::class, 'editCartItem'])->name('keranjang.edit');
+    Route::put('/keranjang/{detailKeranjang}', [PesananController::class, 'updateCartItem'])->name('keranjang.update');
     Route::get('/checkout', [PesananController::class, 'checkout'])->name('pesan.checkout');
     Route::post('/checkout/proses', [PesananController::class, 'storeCheckout'])->name('pesan.storeCheckout');
     

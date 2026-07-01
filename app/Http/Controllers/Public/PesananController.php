@@ -183,7 +183,11 @@ public function show(Produk $produk)
         }
 
         $keranjang = Keranjang::with('detailKeranjang.produk')->where('user_id', Auth::id())->where('status', 'aktif')->first();
-        
+
+        if (!$keranjang || $keranjang->detailKeranjang->isEmpty()) {
+            return back()->with('error', 'Keranjang Anda kosong.');
+        }
+
         $total_harga = $keranjang->detailKeranjang->sum('subtotal');
         $total_item = $keranjang->detailKeranjang->sum('jumlah');
 

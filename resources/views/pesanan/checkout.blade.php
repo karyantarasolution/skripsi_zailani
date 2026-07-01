@@ -50,8 +50,8 @@
                         <p class="text-xs font-bold mt-1 uppercase opacity-90">A.N ORBIT DIGITAL PRINTING</p>
                     </div>
 
-                    <div x-show="metode_pembayaran === 'Cash'" class="bg-emerald-600 p-8 rounded-3xl shadow-sm text-white border border-emerald-500 transition-all">
-                        <h3 class="font-black uppercase mb-2 tracking-tighter">Pembayaran Cash</h3>
+                    <div x-show="metode_pembayaran === 'Cash'" class="bg-indigo-950 p-8 rounded-3xl shadow-sm text-white border border-indigo-900 transition-all">
+                        <h3 class="font-black uppercase mb-4 tracking-tighter text-indigo-200">Pembayaran Cash</h3>
                         <p class="text-sm font-bold opacity-90">Bayar langsung di kasir toko setelah pesanan diproses.</p>
                         <p class="text-[10px] font-black uppercase mt-4 opacity-70">Orbit Digital Printing - Banjarmasin</p>
                     </div>

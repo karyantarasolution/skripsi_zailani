@@ -1,8 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">
-            Dashboard {{ str_replace('_', ' ', Auth::user()->role) }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">
+                Dashboard
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -25,7 +27,7 @@
             <div class="bg-indigo-950 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden border border-indigo-900">
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600 rounded-full blur-3xl opacity-20"></div>
                 <div class="relative z-10">
-                    <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Selamat Datang, {{ Auth::user()->name }}! 👋</h3>
+                    <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Selamat Datang, {{ Auth::user()->name }}!</h3>
                     <p class="text-indigo-300 font-medium text-sm">
                         Anda login sebagai <span class="text-white font-black uppercase bg-indigo-800 px-3 py-1 rounded-lg ml-1">{{ str_replace('_', ' ', Auth::user()->role) }}</span>. 
                         Berikut adalah ringkasan operasional toko hari ini.
@@ -33,72 +35,155 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{-- Stat Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                @if(in_array($role, ['super_admin', 'admin_kantor']))
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
-                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Omzet Bulan Ini</p>
-                        <h4 class="text-xl font-black text-gray-950">Rp {{ number_format($stats['omzet_bulan_ini'], 0, ',', '.') }}</h4>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform relative overflow-hidden">
-                    @if($stats['stok_kritis'] > 0)
-                        <div class="absolute top-0 right-0 w-2 h-full bg-red-500 animate-pulse"></div>
+                {{-- Pesanan Aktif --}}
+                <a href="{{ route('admin.pesanan.index') }}" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-6 transform hover:-translate-y-1 transition-all relative overflow-hidden group cursor-pointer">
+                    @if($stats['pesanan_aktif'] > 0)
+                        <div class="absolute top-0 right-0 w-2 h-full bg-blue-400 animate-pulse"></div>
                     @endif
-                    <div class="w-14 h-14 rounded-2xl {{ $stats['stok_kritis'] > 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                     </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Stok Kritis</p>
-                        <h4 class="text-xl font-black {{ $stats['stok_kritis'] > 0 ? 'text-red-600' : 'text-gray-950' }}">{{ $stats['stok_kritis'] }} Item</h4>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pesanan Aktif</p>
+                                <h4 class="text-2xl font-black text-gray-950">{{ $stats['pesanan_aktif'] }} Pesanan</h4>
+                            </div>
+                            <span class="px-4 py-2 text-xs font-black uppercase bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">Kelola &rarr;</span>
+                        </div>
                     </div>
-                </div>
-                @endif
+                </a>
 
-                @if(in_array($role, ['super_admin', 'kasir']))
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform relative overflow-hidden">
-                    @if($stats['pesanan_baru'] > 0)
-                        <div class="absolute top-0 right-0 w-2 h-full bg-orange-400 animate-pulse"></div>
+                {{-- Pesanan Selesai --}}
+                <a href="{{ route('admin.pesanan.selesai') }}" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-6 transform hover:-translate-y-1 transition-all relative overflow-hidden group cursor-pointer">
+                    @if($stats['pesanan_selesai'] > 0)
+                        <div class="absolute top-0 right-0 w-2 h-full bg-emerald-400 animate-pulse"></div>
                     @endif
-                    <div class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Perlu Verifikasi</p>
-                        <h4 class="text-xl font-black text-gray-950">{{ $stats['pesanan_baru'] }} Pesanan</h4>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pesanan Selesai</p>
+                                <h4 class="text-2xl font-black text-gray-950">{{ $stats['pesanan_selesai'] }} Pesanan</h4>
+                            </div>
+                            <span class="px-4 py-2 text-xs font-black uppercase bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-all">Lihat &rarr;</span>
+                        </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Transaksi Hari Ini</p>
-                        <h4 class="text-xl font-black text-gray-950">{{ $stats['transaksi_hari_ini'] }} Transaksi</h4>
-                    </div>
-                </div>
-                @endif
+            </div>
 
-                @if($role === 'super_admin')
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Pelanggan</p>
-                        <h4 class="text-xl font-black text-gray-950">{{ $stats['total_pelanggan'] }} Akun</h4>
-                    </div>
+            {{-- Grafik Section --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Grafik Omzet 7 Hari Terakhir</h4>
+                    <canvas id="omzetChart" height="200"></canvas>
                 </div>
-                @endif
-
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Grafik Status Pesanan</h4>
+                    <canvas id="statusChart" height="200"></canvas>
+                </div>
             </div>
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const omzetData = @json($stats['omzet_7_hari']);
+            const statusData = @json($stats['status_counts']);
+
+            const labels7 = [];
+            const values7 = [];
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().split('T')[0];
+                const dayName = d.toLocaleDateString('id-ID', { weekday: 'short' });
+                labels7.push(dayName);
+                values7.push(omzetData[key] || 0);
+            }
+
+            const statusLabels = [];
+            const statusValues = [];
+            const statusColors = [];
+            const colorMap = {
+                'Verifikasi': '#f59e0b',
+                'Antrean Cetak': '#3b82f6',
+                'Produksi': '#8b5cf6',
+                'Siap Ambil': '#10b981',
+                'Sedang Dikirim': '#06b6d4',
+                'Selesai': '#059669',
+                'Dibatalkan': '#ef4444',
+            };
+            for (const [k, v] of Object.entries(statusData)) {
+                statusLabels.push(k);
+                statusValues.push(v);
+                statusColors.push(colorMap[k] || '#6b7280');
+            }
+
+            new Chart(document.getElementById('omzetChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels7,
+                    datasets: [{
+                        label: 'Omzet (Rp)',
+                        data: values7,
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(v) {
+                                    return 'Rp' + v.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusValues,
+                        backgroundColor: statusColors,
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11, weight: 'bold' },
+                                padding: 12,
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

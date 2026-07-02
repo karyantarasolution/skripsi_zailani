@@ -23,6 +23,12 @@
         @endif
 
         @if(in_array(Auth::user()->role, ['super_admin', 'admin_kantor', 'kasir']))
+            @php
+                $notif_antrean = \App\Models\Pesanan::where('status', 'Antrean Cetak')->count();
+                $notif_aktif = \App\Models\Pesanan::whereNotIn('status', ['Selesai', 'Dibatalkan', 'Verifikasi'])->count();
+                $notif_selesai = \App\Models\Pesanan::where('status', 'Selesai')->count();
+                $notif_verifikasi = \App\Models\Pesanan::where('status', 'Verifikasi')->count();
+            @endphp
             <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mt-4 mb-4 tracking-widest">Operasional Toko</p>
 
             <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
@@ -31,15 +37,30 @@
             </a>
             
             @if(in_array(Auth::user()->role, ['super_admin', 'kasir']))
-            <a href="{{ route('admin.pesanan.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.index') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-medium">Antrean Pesanan</span>
+            <a href="{{ route('admin.pesanan.index') }}" class="flex items-center justify-between space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.index') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-medium">Antrean Pesanan</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                    @if($notif_antrean > 0)
+                        <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-yellow-400 text-yellow-900 rounded-full">{{ $notif_antrean }}</span>
+                    @endif
+                    @if($notif_verifikasi > 0)
+                        <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-orange-400 text-orange-900 rounded-full animate-pulse">{{ $notif_verifikasi }}</span>
+                    @endif
+                </div>
             </a>
             @endif
 
-            <a href="{{ route('admin.pesanan.selesai') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.selesai') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                <span class="font-medium">Riwayat Selesai</span>
+            <a href="{{ route('admin.pesanan.selesai') }}" class="flex items-center justify-between space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.selesai') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    <span class="font-medium">Riwayat Selesai</span>
+                </div>
+                @if($notif_selesai > 0)
+                    <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-emerald-400 text-emerald-900 rounded-full">{{ $notif_selesai }}</span>
+                @endif
             </a>
         @endif
 

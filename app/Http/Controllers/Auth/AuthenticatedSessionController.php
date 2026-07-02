@@ -27,8 +27,7 @@ public function store(LoginRequest $request): RedirectResponse
     $request->authenticate();
     $request->session()->regenerate();
 
-    // Tambahkan logic ini
-    if ($request->user()->role === 'admin') {
+    if (in_array($request->user()->role, ['super_admin', 'admin_kantor', 'kasir'])) {
         return redirect()->intended(route('admin.dashboard'));
     }
 

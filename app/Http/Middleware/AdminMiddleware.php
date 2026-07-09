@@ -11,20 +11,16 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // 1. Cek apakah sudah login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // 2. Daftar role yang diizinkan masuk ke area admin
-        $rolesPetugas = ['super_admin', 'admin_kantor', 'kasir'];
+        $rolesStaff = ['admin', 'pegawai'];
 
-        // 3. Jika rolenya termasuk petugas, izinkan lewat
-        if (in_array(Auth::user()->role, $rolesPetugas)) {
+        if (in_array(Auth::user()->role, $rolesStaff)) {
             return $next($request);
         }
 
-        // 4. Jika bukan petugas (pelanggan), tendang ke dashboard pelanggan
-        return redirect()->route('dashboard')->with('error', 'Akses Ditolak! Anda bukan petugas Orbit Print.');
+        return redirect()->route('dashboard')->with('error', 'Akses Ditolak! Anda bukan staf Orbit Print.');
     }
 }

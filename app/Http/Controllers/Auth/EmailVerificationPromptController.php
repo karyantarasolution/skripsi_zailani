@@ -14,7 +14,7 @@ class EmailVerificationPromptController extends Controller
      */
     public function __invoke(Request $request): RedirectResponse|View
     {
-        $route = in_array($request->user()->role, ['super_admin', 'admin_kantor', 'kasir'])
+        $route = in_array($request->user()->role, ['admin', 'pegawai'])
             ? 'admin.dashboard'
             : 'dashboard';
 

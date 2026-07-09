@@ -236,7 +236,7 @@ public function show(Produk $produk)
 
         try {
             $fonnte = new FonnteService();
-            $adminList = User::whereIn('role', ['super_admin', 'admin_kantor', 'kasir'])->get();
+            $adminList = User::whereIn('role', ['admin', 'pegawai'])->get();
 
             $totalFormat = 'Rp ' . number_format($pesanan->total_bayar, 0, ',', '.');
             $items = $keranjang->detailKeranjang->map(fn($d) => ($d->produk->nama_produk ?? 'Produk') . ' (' . $d->jumlah . ' pcs)')->join(', ');

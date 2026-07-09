@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        $route = in_array($user->role, ['super_admin', 'admin_kantor', 'kasir'])
+        $route = in_array($user->role, ['admin', 'pegawai'])
             ? 'admin.dashboard'
             : 'dashboard';
 

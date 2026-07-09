@@ -4,8 +4,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\BahanBakuController;
-use App\Http\Controllers\Admin\KaryawanController;
+use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\PelangganController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\PesananController as AdminPesananController;
+use App\Http\Controllers\Admin\TransaksiController;
+use App\Http\Controllers\Admin\BahanMasukKeluarController;
+use App\Http\Controllers\Admin\PengeluaranOperasionalController;
 use App\Http\Controllers\Public\KatalogController;
 use App\Http\Controllers\Public\PesananController;
 use App\Http\Controllers\Public\UlasanController;
@@ -43,12 +48,35 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Data Pegawai
+    Route::resource('pegawai', PegawaiController::class)->except(['create', 'show', 'edit']);
+    
+    // Data Pelanggan
+    Route::resource('pelanggan', PelangganController::class)->except(['create', 'edit']);
+    
+    // Data Supplier
+    Route::resource('supplier', SupplierController::class)->except(['create', 'show', 'edit']);
+    
+    // Data Produk
     Route::resource('produk', ProdukController::class);
     Route::post('/produk/{id}/formula', [ProdukController::class, 'updateFormula'])->name('produk.formula');
     
+    // Data Bahan Baku
     Route::resource('bahan', BahanBakuController::class);
     Route::post('/bahan/{id}/restock', [BahanBakuController::class, 'restock'])->name('bahan.restock');
     
+    // Bahan Masuk & Bahan Keluar
+    Route::get('/bahan-masuk-keluar', [BahanMasukKeluarController::class, 'index'])->name('bahan-masuk-keluar.index');
+    Route::post('/bahan-masuk-keluar', [BahanMasukKeluarController::class, 'store'])->name('bahan-masuk-keluar.store');
+    
+    // Data Transaksi
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
+    
+    // Pengeluaran Operasional
+    Route::resource('pengeluaran-operasional', PengeluaranOperasionalController::class)->except(['create', 'show', 'edit']);
+    
+    // Pesanan (Order Management)
     Route::get('/pesanan', [AdminPesananController::class, 'index'])->name('pesanan.index');
     Route::get('/pesanan/{id}', [AdminPesananController::class, 'show'])->name('pesanan.show');
     Route::patch('/pesanan/{id}/status', [AdminPesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
@@ -57,6 +85,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/pesanan/{id}/cetak-label', [AdminPesananController::class, 'cetakLabel'])->name('pesanan.cetakLabel');
     Route::get('/pesanan/{id}/cetak-spk', [AdminPesananController::class, 'cetakSPK'])->name('pesanan.cetakSPK');
 
+    // Laporan PDF
     Route::get('/laporan/penjualan', [AdminPesananController::class, 'laporanPenjualan'])->name('laporan.penjualan');
     Route::get('/laporan/bahan', [AdminPesananController::class, 'laporanBahan'])->name('laporan.bahan');
     Route::get('/laporan/terlaris', [AdminPesananController::class, 'laporanTerlaris'])->name('laporan.terlaris');
@@ -65,7 +94,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/laporan/stok', [AdminPesananController::class, 'laporanStok'])->name('laporan.stok');
     Route::get('/laporan/retur', [AdminPesananController::class, 'laporanRetur'])->name('laporan.retur');
     
-    Route::resource('karyawan', KaryawanController::class)->except(['create', 'show', 'edit']);
+    // Keep old route alias for backward compatibility
+    Route::get('/karyawan', [PegawaiController::class, 'index'])->name('karyawan.index');
 });
 
 Route::middleware('auth')->group(function () {

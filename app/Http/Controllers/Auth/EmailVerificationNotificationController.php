@@ -13,7 +13,7 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $route = in_array($request->user()->role, ['super_admin', 'admin_kantor', 'kasir'])
+        $route = in_array($request->user()->role, ['admin', 'pegawai'])
             ? 'admin.dashboard'
             : 'dashboard';
 

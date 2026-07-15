@@ -62,7 +62,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/produk/{id}/formula', [ProdukController::class, 'updateFormula'])->name('produk.formula');
     
     // Data Bahan Baku
-    Route::resource('bahan', BahanBakuController::class);
+    Route::resource('bahan', BahanBakuController::class)->except(['create', 'show', 'edit']);
     Route::post('/bahan/{id}/restock', [BahanBakuController::class, 'restock'])->name('bahan.restock');
     
     // Bahan Masuk & Bahan Keluar

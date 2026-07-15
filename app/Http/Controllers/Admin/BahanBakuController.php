@@ -75,9 +75,11 @@ class BahanBakuController extends Controller
         $bahan = BahanBaku::findOrFail($id);
         $stok_sebelum = $bahan->stok;
         
-        // Kalkulasi metode Inventory (Tambah/Kurang)
+        // Kalkulasi metode Inventory (Tambah/Kurang/Penyesuaian)
         if($request->jenis == 'masuk') {
             $stok_sesudah = $stok_sebelum + $request->jumlah;
+        } elseif($request->jenis == 'penyesuaian') {
+            $stok_sesudah = $request->jumlah; // Penyesuaian = stok aktual (opname)
         } else {
             $stok_sesudah = $stok_sebelum - $request->jumlah;
             if($stok_sesudah < 0) $stok_sesudah = 0; // Cegah stok minus

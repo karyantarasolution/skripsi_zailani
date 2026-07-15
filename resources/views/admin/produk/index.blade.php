@@ -11,6 +11,11 @@
                     ✓ {{ session('success') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl font-bold uppercase tracking-widest text-xs">
+                    ⚠️ {{ session('error') }}
+                </div>
+            @endif
 
             <div class="flex justify-end mb-6">
                 <a href="{{ route('admin.produk.create') }}" class="px-6 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl transition transform active:scale-95">

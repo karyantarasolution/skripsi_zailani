@@ -77,7 +77,7 @@ class ProdukController extends Controller
 
         if ($request->hasFile('gambar')) {
             if ($produk->gambar) {
-                Storage::disk('public')->delete('produk/' . $produk->gambar);
+                Storage::disk('public')->delete($produk->gambar);
             }
             $data['gambar'] = $request->file('gambar')->store('produk', 'public');
         }
@@ -90,7 +90,7 @@ class ProdukController extends Controller
     public function destroy(Produk $produk)
     {
         if ($produk->gambar) {
-            Storage::disk('public')->delete('produk/' . $produk->gambar);
+            Storage::disk('public')->delete($produk->gambar);
         }
         $produk->delete();
 

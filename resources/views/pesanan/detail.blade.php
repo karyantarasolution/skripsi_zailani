@@ -124,6 +124,17 @@
                                 <span class="font-black text-emerald-600 text-lg">- Rp {{ number_format($pesanan->potongan_diskon, 0, ',', '.') }}</span>
                             </div>
                             @endif
+
+                            @if(explode(' | ', $pesanan->metode_pengiriman)[0] === 'Kurir Lokal')
+                            <div class="flex justify-between items-center text-gray-500">
+                                <span class="text-xs font-black uppercase tracking-widest">Ongkos Kirim</span>
+                                @if($pesanan->ongkir > 0)
+                                    <span class="font-bold text-orange-600">Rp {{ number_format($pesanan->ongkir, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="font-bold text-gray-400 italic">Menunggu admin</span>
+                                @endif
+                            </div>
+                            @endif
                         </div>
 
                         <div class="p-8 bg-gray-950 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
@@ -160,48 +171,80 @@
                                 <p class="text-[10px] text-red-200 mt-1 font-bold">Harap hubungi Admin jika ada kendala.</p>
                             </div>
                         @else
+                            @php
+                                $steps = ['Verifikasi', 'Antrean Cetak', 'Produksi', 'Siap Ambil', 'Selesai'];
+                                $currentIdx = array_search($pesanan->status, $steps);
+                                if ($currentIdx === false) {
+                                    if ($pesanan->status === 'Sedang Dikirim') $currentIdx = 3;
+                                    else $currentIdx = 0;
+                                }
+                            @endphp
                             <div class="relative space-y-6 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-indigo-800 before:to-transparent">
                                 
+                                {{-- Step 1: Verifikasi --}}
+                                @php $active1 = $currentIdx >= 0; @endphp
                                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 bg-indigo-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $active1 ? 'bg-blue-500 shadow-lg shadow-blue-500/30' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500">
+                                        @if($active1)
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        @else
+                                            <span class="text-[10px] font-black">1</span>
+                                        @endif
                                     </div>
                                     @php
                                         $isCash = str_contains($pesanan->metode_pengiriman, 'Cash');
                                     @endphp
-                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ in_array($pesanan->status, ['Verifikasi', 'Antrean Cetak', 'Produksi', 'Selesai']) ? 'bg-indigo-600 border-indigo-500 shadow-lg shadow-indigo-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }}">
-                                        <h4 class="font-black text-sm uppercase">Verifikasi Kasir</h4>
-                                        <p class="text-[10px] text-indigo-200 mt-1">{{ $isCash ? 'Pesanan langsung diproses (Cash).' : 'Mengecek bukti transfer Anda.' }}</p>
+                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $active1 ? 'bg-blue-500/20 border-blue-400/50 shadow-lg shadow-blue-500/10' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all duration-500">
+                                        <h4 class="font-black text-sm uppercase {{ $active1 ? 'text-blue-300' : 'text-gray-500' }}">Verifikasi Kasir</h4>
+                                        <p class="text-[10px] mt-1 {{ $active1 ? 'text-blue-200/80' : 'text-gray-600' }}">{{ $isCash ? 'Pesanan langsung diproses (Cash).' : 'Mengecek bukti transfer Anda.' }}</p>
                                     </div>
                                 </div>
 
+                                {{-- Step 2: Job Masuk --}}
+                                @php $active2 = $currentIdx >= 1; @endphp
                                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ in_array($pesanan->status, ['Antrean Cetak', 'Produksi', 'Selesai']) ? 'bg-indigo-500' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $active2 ? 'bg-amber-500 shadow-lg shadow-amber-500/30' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500">
+                                        @if($active2)
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        @else
+                                            <span class="text-[10px] font-black">2</span>
+                                        @endif
                                     </div>
-                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ in_array($pesanan->status, ['Antrean Cetak', 'Produksi', 'Selesai']) ? 'bg-indigo-600 border-indigo-500 shadow-lg shadow-indigo-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all">
-                                        <h4 class="font-black text-sm uppercase">Job Masuk</h4>
-                                        <p class="text-[10px] text-indigo-200 mt-1">Masuk antrean mesin cetak.</p>
+                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $active2 ? 'bg-amber-500/20 border-amber-400/50 shadow-lg shadow-amber-500/10' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all duration-500">
+                                        <h4 class="font-black text-sm uppercase {{ $active2 ? 'text-amber-300' : 'text-gray-500' }}">Job Masuk</h4>
+                                        <p class="text-[10px] mt-1 {{ $active2 ? 'text-amber-200/80' : 'text-gray-600' }}">Masuk antrean mesin cetak.</p>
                                     </div>
                                 </div>
 
+                                {{-- Step 3: Diproduksi --}}
+                                @php $active3 = $currentIdx >= 2; @endphp
                                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ in_array($pesanan->status, ['Produksi', 'Selesai']) ? 'bg-indigo-500' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $active3 ? 'bg-orange-500 shadow-lg shadow-orange-500/30' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500">
+                                        @if($active3)
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        @else
+                                            <span class="text-[10px] font-black">3</span>
+                                        @endif
                                     </div>
-                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ in_array($pesanan->status, ['Produksi', 'Selesai']) ? 'bg-indigo-600 border-indigo-500 shadow-lg shadow-indigo-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all">
-                                        <h4 class="font-black text-sm uppercase">Diproduksi</h4>
-                                        <p class="text-[10px] text-indigo-200 mt-1">Sedang dicetak & finishing.</p>
+                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $active3 ? 'bg-orange-500/20 border-orange-400/50 shadow-lg shadow-orange-500/10' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all duration-500">
+                                        <h4 class="font-black text-sm uppercase {{ $active3 ? 'text-orange-300' : 'text-gray-500' }}">Diproduksi</h4>
+                                        <p class="text-[10px] mt-1 {{ $active3 ? 'text-orange-200/80' : 'text-gray-600' }}">Sedang dicetak & finishing.</p>
                                     </div>
                                 </div>
 
+                                {{-- Step 4: Siap Ambil / Dikirim --}}
+                                @php $active4 = $currentIdx >= 3; @endphp
                                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) ? 'bg-emerald-500' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $active4 ? 'bg-cyan-500 shadow-lg shadow-cyan-500/30' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500">
+                                        @if($active4)
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        @else
+                                            <span class="text-[10px] font-black">4</span>
+                                        @endif
                                     </div>
-                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) ? 'bg-emerald-500 border-emerald-400 shadow-lg shadow-emerald-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all">
-                                        <h4 class="font-black text-sm uppercase">Siap Ambil / Dikirim</h4>
-                                        <p class="text-[10px] text-indigo-100 mt-1">
+                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $active4 ? 'bg-cyan-500/20 border-cyan-400/50 shadow-lg shadow-cyan-500/10' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all duration-500">
+                                        <h4 class="font-black text-sm uppercase {{ $active4 ? 'text-cyan-300' : 'text-gray-500' }}">Siap Ambil / Dikirim</h4>
+                                        <p class="text-[10px] mt-1 {{ $active4 ? 'text-cyan-200/80' : 'text-gray-600' }}">
                                             @if($pesanan->status == 'Siap Ambil')
                                                 Pesanan siap diambil di toko.
                                             @elseif($pesanan->status == 'Sedang Dikirim')
@@ -213,14 +256,20 @@
                                     </div>
                                 </div>
 
+                                {{-- Step 5: Selesai --}}
+                                @php $active5 = $currentIdx >= 4; @endphp
                                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $pesanan->status == 'Selesai' ? 'bg-emerald-500' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-indigo-950 {{ $active5 ? 'bg-emerald-500 shadow-lg shadow-emerald-500/40' : 'bg-indigo-900' }} text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500">
+                                        @if($active5)
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        @else
+                                            <span class="text-[10px] font-black">5</span>
+                                        @endif
                                     </div>
-                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $pesanan->status == 'Selesai' ? 'bg-emerald-500 border-emerald-400 shadow-lg shadow-emerald-900/50' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all">
-                                        <h4 class="font-black text-sm uppercase">Transaksi Selesai</h4>
-                                        <p class="text-[10px] text-indigo-100 mt-1">
-                                            @if($pesanan->status == 'Selesai')
+                                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border {{ $active5 ? 'bg-emerald-500/20 border-emerald-400/50 shadow-lg shadow-emerald-500/10' : 'bg-indigo-900/50 border-indigo-800 opacity-50' }} transition-all duration-500">
+                                        <h4 class="font-black text-sm uppercase {{ $active5 ? 'text-emerald-300' : 'text-gray-500' }}">Transaksi Selesai</h4>
+                                        <p class="text-[10px] mt-1 {{ $active5 ? 'text-emerald-200/80' : 'text-gray-600' }}">
+                                            @if($active5)
                                                 Terima kasih! Pesanan sudah selesai.
                                             @else
                                                 Menunggu penyelesaian.

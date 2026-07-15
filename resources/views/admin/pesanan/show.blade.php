@@ -22,7 +22,13 @@
                         <div class="space-y-4">
                             @foreach($pesanan->detailPesanan as $detail)
                             <div class="flex items-center gap-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                <img src="{{ asset('storage/'.$detail->produk->gambar) }}" class="w-16 h-16 object-cover rounded-xl shadow-sm">
+                                @if($detail->produk->gambar)
+                                    <img src="{{ asset('storage/'.$detail->produk->gambar) }}" class="w-16 h-16 object-cover rounded-xl shadow-sm">
+                                @else
+                                    <div class="w-16 h-16 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                @endif
                                 <div class="flex-1">
                                     <h5 class="font-black text-gray-950 uppercase">{{ $detail->produk->nama_produk }}</h5>
                                     <p class="text-xs font-bold text-gray-500 mt-1">Ukuran: {{ $detail->panjang }}{{ $detail->produk->satuan ?? 'm' }} x {{ $detail->lebar }}{{ $detail->produk->satuan ?? 'm' }} | Jumlah: {{ $detail->jumlah }}</p>
@@ -93,6 +99,16 @@
                                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Metode Pengiriman</p>
                                 <p class="font-bold text-gray-900">{{ $shippingMethod }}</p>
                             </div>
+                            @if(str_contains($shippingMethod, 'Kurir Lokal'))
+                            <div>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Ongkos Kirim</p>
+                                @if($pesanan->ongkir > 0)
+                                    <p class="font-black text-orange-600">Rp {{ number_format($pesanan->ongkir, 0, ',', '.') }}</p>
+                                @else
+                                    <p class="font-bold text-gray-400 italic">Belum ditentukan</p>
+                                @endif
+                            </div>
+                            @endif
                             <div>
                                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Dibayar</p>
                                 <p class="font-black text-2xl text-indigo-600">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</p>
@@ -106,6 +122,13 @@
                         <form action="{{ route('admin.pesanan.updateStatus', $pesanan->id) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
+
+                            @if(str_contains($shippingMethod, 'Kurir Lokal'))
+                            <div>
+                                <label class="block text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-2">Ongkos Kirim (Rp)</label>
+                                <input type="number" name="ongkir" value="{{ $pesanan->ongkir }}" min="0" class="w-full px-4 py-3 rounded-xl border-0 focus:ring-4 focus:ring-indigo-500 font-bold bg-white text-gray-900" placeholder="Masukkan ongkir...">
+                            </div>
+                            @endif
                             
                             <select name="status" class="w-full px-4 py-3 rounded-xl border-0 focus:ring-4 focus:ring-indigo-500 font-bold bg-white text-gray-900">
                                 <option value="Verifikasi" {{ $pesanan->status == 'Verifikasi' ? 'selected' : '' }}>Verifikasi Pembayaran</option>

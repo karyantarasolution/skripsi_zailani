@@ -47,6 +47,12 @@ class PesananController extends Controller
         $statusLama = $pesanan->status;
         $statusBaru = $request->status;
 
+        if ($request->has('ongkir')) {
+            $ongkirBaru = (int) $request->ongkir;
+            $totalBayarBaru = $pesanan->total_harga - $pesanan->potongan_diskon + $ongkirBaru;
+            $pesanan->update(['ongkir' => $ongkirBaru, 'total_bayar' => $totalBayarBaru]);
+        }
+
         if (($statusBaru == 'Produksi' || $statusBaru == 'Selesai') && ($statusLama != 'Produksi' && $statusLama != 'Selesai')) {
             foreach ($pesanan->detailPesanan as $item) {
                 $pembagi = match($item->produk->satuan) {

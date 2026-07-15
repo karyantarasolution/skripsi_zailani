@@ -11,6 +11,11 @@
                     ✓ {{ session('success') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl font-bold uppercase tracking-widest text-xs">
+                    ⚠️ {{ session('error') }}
+                </div>
+            @endif
 
             <div class="bg-white rounded-[30px] shadow-xl border border-gray-100 overflow-hidden">
                 <div class="p-8 border-b border-gray-100 flex justify-between items-center bg-indigo-950 text-white">

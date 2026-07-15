@@ -3,26 +3,38 @@
 <head>
     <title>Laporan Penjualan Orbit Digital</title>
     <style>
-        body { font-family: sans-serif; font-size: 11px; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th { background: #4f46e5; color: white; padding: 8px; border: 1px solid #ddd; text-transform: uppercase; }
-        td { padding: 8px; border: 1px solid #ddd; }
-        .total-box { text-align: right; font-size: 14px; font-weight: bold; background: #f3f4f6; padding: 10px; }
-        .footer { margin-top: 50px; text-align: right; }
+        body { font-family: 'Helvetica', sans-serif; font-size: 11px; color: #111; }
+        .kop-table { width: 100%; background: #312e81; color: #fff; border-radius: 12px; margin-bottom: 25px; border-collapse: collapse; }
+        .kop-table td { padding: 15px 20px; border: none; vertical-align: middle; }
+        .kop-logo { height: 45px; width: auto; background: #fff; padding: 5px; border-radius: 8px; }
+        table.data { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table.data th { background: #4f46e5; color: white; padding: 8px; border: 1px solid #ddd; text-transform: uppercase; font-size: 10px; }
+        table.data td { padding: 8px; border: 1px solid #ddd; }
+        .total-box { text-align: right; font-size: 14px; font-weight: bold; background: #f3f4f6; padding: 10px; border-radius: 8px; margin-top: 15px; }
+        .footer { margin-top: 50px; text-align: right; font-size: 10px; color: #666; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 style="margin:0;">ORBIT DIGITAL PRINTING</h1>
-        <p style="margin:5px 0;">Laporan Penjualan Bulanan (Selesai)</p>
-        <p style="margin:0; font-size: 10px;">Periode: {{ date('F Y') }}</p>
-    </div>
+    <table class="kop-table">
+        <tr>
+            <td style="width: 60px;">
+                <img src="{{ public_path('images/orbit.png') }}" alt="Logo" class="kop-logo">
+            </td>
+            <td>
+                <h2 style="margin:0; text-transform: uppercase; letter-spacing: 1px;">ORBIT DIGITAL PRINTING</h2>
+                <p style="margin:5px 0 0; font-weight: bold;">Laporan Penjualan Bulanan (Selesai)</p>
+            </td>
+            <td style="text-align: right; font-size: 10px;">
+                Periode: {{ date('F Y') }}<br>
+                Dicetak: {{ date('d/m/Y H:i') }} WITA
+            </td>
+        </tr>
+    </table>
 
-    <table>
+    <table class="data">
         <thead>
             <tr>
-                <th>No</th>
+                <th style="width: 30px; text-align: center;">No</th>
                 <th>Tgl</th>
                 <th>Invoice</th>
                 <th>Pelanggan</th>

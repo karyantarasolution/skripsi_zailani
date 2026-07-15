@@ -3,7 +3,7 @@
         <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight italic">Finalisasi Pembayaran</h2>
     </x-slot>
 
-    <div class="py-12" x-data="{ metode_pembayaran: 'Mandiri' }">
+    <div class="py-12" x-data="{ metode_pembayaran: 'Mandiri', metode_pengiriman: 'Ambil di Toko' }">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
@@ -28,6 +28,16 @@
                                 <span class="font-black text-emerald-600">- Rp {{ number_format($potongan_diskon, 0, ',', '.') }}</span>
                             </div>
                             @endif
+
+                            <div class="flex justify-between items-center pb-4 border-b border-gray-50">
+                                <span class="text-sm font-bold text-gray-500">Ongkos Kirim</span>
+                                <template x-if="metode_pengiriman === 'Ambil di Toko'">
+                                    <span class="font-black text-gray-900">Gratis</span>
+                                </template>
+                                <template x-if="metode_pengiriman === 'Kurir Lokal'">
+                                    <span class="font-black text-orange-500">Ditentukan Admin</span>
+                                </template>
+                            </div>
 
                             <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 mt-4">
                                 <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Total yang harus dibayar</p>
@@ -73,10 +83,13 @@
                         
                         <div class="space-y-2">
                             <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Metode Pengiriman</label>
-                            <select name="metode_pengiriman" required class="w-full px-4 py-3 rounded-xl border-gray-200 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 font-bold text-gray-700 transition">
+                            <select name="metode_pengiriman" required x-model="metode_pengiriman" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 font-bold text-gray-700 transition">
                                 <option value="Ambil di Toko">Ambil di Toko (Gratis)</option>
                                 <option value="Kurir Lokal">Kurir Lokal (Banjarmasin)</option>
                             </select>
+                            <p x-show="metode_pengiriman === 'Kurir Lokal'" x-transition class="text-[10px] font-black text-orange-500 uppercase tracking-widest mt-1">
+                                *Ongkos kirim akan ditentukan oleh admin saat verifikasi pesanan
+                            </p>
                         </div>
 
                         <div class="space-y-2">

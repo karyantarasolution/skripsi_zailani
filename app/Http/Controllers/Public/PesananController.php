@@ -166,8 +166,9 @@ public function show(Produk $produk)
         }
         
         $total_bayar = $total_harga - $potongan_diskon;
+        $ongkir = 0;
 
-        return view('pesanan.checkout', compact('keranjang', 'total_harga', 'potongan_diskon', 'total_bayar', 'total_item'));
+        return view('pesanan.checkout', compact('keranjang', 'total_harga', 'potongan_diskon', 'total_bayar', 'total_item', 'ongkir'));
     }
 
  public function storeCheckout(Request $request)
@@ -208,6 +209,7 @@ public function show(Produk $produk)
             'total_harga' => $total_harga,
             'potongan_diskon' => $potongan_diskon,
             'total_bayar' => $total_bayar,
+            'ongkir' => 0,
             'metode_pengiriman' => $request->metode_pengiriman . ' | Bayar via: ' . $request->metode_pembayaran,
             'bukti_bayar' => $pathBukti,
             'status' => $request->metode_pembayaran === 'Cash' ? 'Antrean Cetak' : 'Verifikasi',

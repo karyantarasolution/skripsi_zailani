@@ -76,6 +76,12 @@
             <span style="float: right;">- Rp {{ number_format($pesanan->potongan_diskon, 0, ',', '.') }}</span>
         </div>
         @endif
+        @if($pesanan->ongkir > 0)
+        <div style="margin-bottom: 5px; color: #c2410c;">
+            <span>Ongkos Kirim:</span>
+            <span style="float: right;">Rp {{ number_format($pesanan->ongkir, 0, ',', '.') }}</span>
+        </div>
+        @endif
         <div class="grand-total">
             <span>Total Bayar:</span>
             <span style="float: right;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</span>

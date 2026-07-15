@@ -18,6 +18,7 @@ class Pesanan extends Model
         'total_harga',
         'potongan_diskon',
         'total_bayar',
+        'ongkir',
         'metode_pengiriman',
         'bukti_bayar',
         'status',

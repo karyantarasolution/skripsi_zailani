@@ -3,14 +3,10 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'username', 'email', 'password', 'role', 'telepon', 'alamat', 'nip', 'jabatan', 'jenis_kelamin', 'tanggal_lahir', 'foto', 'poin', 'tanggal_bergabung'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -31,6 +27,11 @@ class User extends Authenticatable
         'foto',
         'poin',
         'tanggal_bergabung',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     public function pesanan()

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight italic">Finalisasi Pembayaran</h2>
+        <h2 class="font-black text-2xl text-white uppercase tracking-tight italic">Finalisasi <span class="gradient-text">Pembayaran</span></h2>
     </x-slot>
 
     <div class="py-12" x-data="{ metode_pembayaran: 'Mandiri', metode_pengiriman: 'Ambil di Toko' }">
@@ -8,40 +8,40 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
                 <div class="space-y-6">
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <h3 class="font-black text-gray-950 uppercase mb-6 tracking-tighter">Rincian & Diskon</h3>
+                    <div class="glass-card-static p-8">
+                        <h3 class="font-black text-white uppercase mb-6 tracking-tighter">Rincian & Diskon</h3>
                         <div class="space-y-4">
                             
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span class="text-sm font-bold text-gray-500">Total Item</span>
-                                <span class="font-black text-gray-900">{{ $total_item }} Pcs</span>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/[0.06]">
+                                <span class="text-sm font-bold text-white/40">Total Item</span>
+                                <span class="font-black text-white">{{ $total_item }} Pcs</span>
                             </div>
 
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span class="text-sm font-bold text-gray-500">Subtotal</span>
-                                <span class="font-black text-gray-900">Rp {{ number_format($total_harga, 0, ',', '.') }}</span>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/[0.06]">
+                                <span class="text-sm font-bold text-white/40">Subtotal</span>
+                                <span class="font-black text-white">Rp {{ number_format($total_harga, 0, ',', '.') }}</span>
                             </div>
 
                             @if($potongan_diskon > 0)
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span class="text-sm font-black text-emerald-500 uppercase">Diskon Grosir (10%)</span>
-                                <span class="font-black text-emerald-600">- Rp {{ number_format($potongan_diskon, 0, ',', '.') }}</span>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/[0.06]">
+                                <span class="text-sm font-black text-emerald-400 uppercase">Diskon Grosir (10%)</span>
+                                <span class="font-black text-emerald-400">- Rp {{ number_format($potongan_diskon, 0, ',', '.') }}</span>
                             </div>
                             @endif
 
-                            <div class="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span class="text-sm font-bold text-gray-500">Ongkos Kirim</span>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/[0.06]">
+                                <span class="text-sm font-bold text-white/40">Ongkos Kirim</span>
                                 <template x-if="metode_pengiriman === 'Ambil di Toko'">
-                                    <span class="font-black text-gray-900">Gratis</span>
+                                    <span class="font-black text-white">Gratis</span>
                                 </template>
                                 <template x-if="metode_pengiriman === 'Kurir Lokal'">
-                                    <span class="font-black text-orange-500">Ditentukan Admin</span>
+                                    <span class="font-black text-orange-400">Ditentukan Admin</span>
                                 </template>
                             </div>
 
-                            <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 mt-4">
-                                <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Total yang harus dibayar</p>
-                                <p class="font-black text-3xl text-gray-950 tracking-tighter">
+                            <div class="p-4 bg-white/[0.04] rounded-2xl border border-white/[0.08] mt-4">
+                                <p class="text-[10px] font-black text-white/30 uppercase mb-1">Total yang harus dibayar</p>
+                                <p class="font-black text-3xl text-white tracking-tighter">
                                     Rp {{ number_format($total_bayar, 0, ',', '.') }}
                                 </p>
                             </div>
@@ -49,29 +49,29 @@
                         </div>
                     </div>
 
-                    <div x-show="metode_pembayaran !== 'Cash'" class="bg-indigo-950 p-8 rounded-3xl shadow-sm text-white border border-indigo-900 transition-all">
-                        <h3 class="font-black uppercase mb-4 tracking-tighter text-indigo-200">Instruksi Transfer</h3>
-                        <p class="text-[10px] font-black uppercase mb-1 opacity-70" x-text="'Bank ' + metode_pembayaran"></p>
-                        <p class="font-black text-2xl tracking-wider" x-text="
+                    <div x-show="metode_pembayaran !== 'Cash'" class="glass-card-static p-8 transition-all" x-transition>
+                        <h3 class="font-black uppercase mb-4 tracking-tighter text-purple-300">Instruksi Transfer</h3>
+                        <p class="text-[10px] font-black uppercase mb-1 text-white/40" x-text="'Bank ' + metode_pembayaran"></p>
+                        <p class="font-black text-2xl tracking-wider text-white" x-text="
                             metode_pembayaran === 'Mandiri' ? '123-000-456-789' : 
                             (metode_pembayaran === 'BCA' ? '0987-6543-21' : 
                             (metode_pembayaran === 'BNI' ? '1122-3344-55' : '0011-2233-4455-667'))
                         "></p>
-                        <p class="text-xs font-bold mt-1 uppercase opacity-90">A.N ORBIT DIGITAL PRINTING</p>
+                        <p class="text-xs font-bold mt-1 uppercase text-white/60">A.N ORBIT DIGITAL PRINTING</p>
                     </div>
 
-                    <div x-show="metode_pembayaran === 'Cash'" class="bg-indigo-950 p-8 rounded-3xl shadow-sm text-white border border-indigo-900 transition-all">
-                        <h3 class="font-black uppercase mb-4 tracking-tighter text-indigo-200">Pembayaran Cash</h3>
-                        <p class="text-sm font-bold opacity-90">Bayar langsung di kasir toko setelah pesanan diproses.</p>
-                        <p class="text-[10px] font-black uppercase mt-4 opacity-70">Orbit Digital Printing - Banjarmasin</p>
+                    <div x-show="metode_pembayaran === 'Cash'" class="glass-card-static p-8 transition-all" x-transition>
+                        <h3 class="font-black uppercase mb-4 tracking-tighter text-purple-300">Pembayaran Cash</h3>
+                        <p class="text-sm font-bold text-white/60">Bayar langsung di kasir toko setelah pesanan diproses.</p>
+                        <p class="text-[10px] font-black uppercase mt-4 text-white/30">Orbit Digital Printing - Banjarmasin</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h3 class="font-black text-gray-950 uppercase mb-6 tracking-tighter italic">Pengiriman & Pembayaran</h3>
+                <div class="glass-card-static p-8">
+                    <h3 class="font-black text-white uppercase mb-6 tracking-tighter italic">Pengiriman & Pembayaran</h3>
                     
                     @if ($errors->any())
-                        <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl font-bold uppercase tracking-widest text-[10px]">
+                        <div class="mb-6 p-4 bg-red-500/10 border border-red-500/30 text-red-300 rounded-2xl font-bold uppercase tracking-widest text-[10px]">
                             @foreach ($errors->all() as $error)
                                 <p>⚠️ {{ $error }}</p>
                             @endforeach
@@ -82,61 +82,61 @@
                         @csrf
                         
                         <div class="space-y-2">
-                            <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Metode Pengiriman</label>
-                            <select name="metode_pengiriman" required x-model="metode_pengiriman" class="w-full px-4 py-3 rounded-xl border-gray-200 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 font-bold text-gray-700 transition">
+                            <label class="block text-sm font-black text-white/40 uppercase tracking-widest">Metode Pengiriman</label>
+                            <select name="metode_pengiriman" required x-model="metode_pengiriman" class="cosmic-select w-full">
                                 <option value="Ambil di Toko">Ambil di Toko (Gratis)</option>
                                 <option value="Kurir Lokal">Kurir Lokal (Banjarmasin)</option>
                             </select>
-                            <p x-show="metode_pengiriman === 'Kurir Lokal'" x-transition class="text-[10px] font-black text-orange-500 uppercase tracking-widest mt-1">
+                            <p x-show="metode_pengiriman === 'Kurir Lokal'" x-transition class="text-[10px] font-black text-orange-400 uppercase tracking-widest mt-1">
                                 *Ongkos kirim akan ditentukan oleh admin saat verifikasi pesanan
                             </p>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Metode Pembayaran</label>
+                            <label class="block text-sm font-black text-white/40 uppercase tracking-widest">Metode Pembayaran</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_pembayaran" value="Mandiri" x-model="metode_pembayaran" class="peer sr-only" required>
-                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
-                                        <span class="font-black text-gray-900 uppercase">Mandiri</span>
+                                    <div class="p-3 border-2 border-white/[0.08] rounded-xl peer-checked:border-emerald-500/50 peer-checked:bg-emerald-500/10 text-center transition">
+                                        <span class="font-black text-white uppercase">Mandiri</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_pembayaran" value="BCA" x-model="metode_pembayaran" class="peer sr-only" required>
-                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
-                                        <span class="font-black text-gray-900 uppercase">BCA</span>
+                                    <div class="p-3 border-2 border-white/[0.08] rounded-xl peer-checked:border-emerald-500/50 peer-checked:bg-emerald-500/10 text-center transition">
+                                        <span class="font-black text-white uppercase">BCA</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_pembayaran" value="BNI" x-model="metode_pembayaran" class="peer sr-only" required>
-                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
-                                        <span class="font-black text-gray-900 uppercase">BNI</span>
+                                    <div class="p-3 border-2 border-white/[0.08] rounded-xl peer-checked:border-emerald-500/50 peer-checked:bg-emerald-500/10 text-center transition">
+                                        <span class="font-black text-white uppercase">BNI</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_pembayaran" value="BRI" x-model="metode_pembayaran" class="peer sr-only" required>
-                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition">
-                                        <span class="font-black text-gray-900 uppercase">BRI</span>
+                                    <div class="p-3 border-2 border-white/[0.08] rounded-xl peer-checked:border-emerald-500/50 peer-checked:bg-emerald-500/10 text-center transition">
+                                        <span class="font-black text-white uppercase">BRI</span>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer md:col-span-2">
                                     <input type="radio" name="metode_pembayaran" value="Cash" x-model="metode_pembayaran" class="peer sr-only" required>
-                                    <div class="p-3 border-2 border-gray-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-center transition flex items-center justify-center gap-2">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                        <span class="font-black text-gray-900 uppercase">Cash (Bayar di Tempat)</span>
+                                    <div class="p-3 border-2 border-white/[0.08] rounded-xl peer-checked:border-emerald-500/50 peer-checked:bg-emerald-500/10 text-center transition flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        <span class="font-black text-white uppercase">Cash (Bayar di Tempat)</span>
                                     </div>
                                 </label>
                             </div>
                         </div>
 
                         <div x-show="metode_pembayaran !== 'Cash'" class="space-y-2">
-                            <label class="block text-sm font-black text-gray-400 uppercase tracking-widest">Foto Struk / Screenshot</label>
-                            <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-emerald-500 transition bg-gray-50/50">
-                                <input type="file" name="bukti_bayar" accept="image/*" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-emerald-500 file:text-white hover:file:bg-emerald-600 cursor-pointer">
+                            <label class="block text-sm font-black text-white/40 uppercase tracking-widest">Foto Struk / Screenshot</label>
+                            <div class="border-2 border-dashed border-white/[0.1] rounded-2xl p-6 text-center hover:border-purple-500/30 transition bg-white/[0.02]">
+                                <input type="file" name="bukti_bayar" accept="image/*" class="cosmic-file-input block w-full">
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-4 bg-emerald-500 text-white font-black uppercase rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-600 transition-all transform active:scale-95">
+                        <button type="submit" class="w-full py-4 cosmic-btn cosmic-btn-success rounded-2xl">
                             Konfirmasi Transaksi
                         </button>
                     </form>

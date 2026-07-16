@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">
-                Dashboard Admin
+            <h2 class="font-black text-2xl text-white uppercase tracking-tight">
+                Dashboard <span class="gradient-text">Admin</span>
             </h2>
             <div class="flex items-center gap-3 text-sm">
-                <span class="text-gray-500 font-medium">{{ now()->isoFormat('dddd, D MMMM Y') }}</span>
+                <span class="text-white/40 font-medium">{{ now()->isoFormat('dddd, D MMMM Y') }}</span>
             </div>
         </div>
     </x-slot>
@@ -14,171 +14,173 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             @if(session('error'))
-                <div class="p-5 bg-red-50 border-2 border-red-200 text-red-700 rounded-3xl font-black uppercase tracking-wider text-sm flex items-center gap-3">
+                <div class="p-5 bg-red-500/10 border border-red-500/20 text-red-300 rounded-2xl font-black uppercase tracking-wider text-sm flex items-center gap-3 backdrop-blur-xl">
                     <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             @if(session('success'))
-                <div class="p-5 bg-emerald-50 border-2 border-emerald-200 text-emerald-700 rounded-3xl font-black uppercase tracking-wider text-sm flex items-center gap-3">
+                <div class="p-5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-2xl font-black uppercase tracking-wider text-sm flex items-center gap-3 backdrop-blur-xl">
                     <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             {{-- Welcome Banner --}}
-            <div class="bg-indigo-950 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden border border-indigo-900">
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600 rounded-full blur-3xl opacity-20"></div>
+            <div class="glass-card-static p-8 relative overflow-hidden animate-fade-in">
+                <div class="absolute -top-24 -right-24 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl animate-cosmic-pulse"></div>
+                <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-cyan-500/15 rounded-full blur-3xl" style="animation: floatOrb 12s infinite ease-in-out;"></div>
                 <div class="relative z-10 flex items-center justify-between">
                     <div>
-                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Selamat Datang, {{ Auth::user()->name }}!</h3>
-                        <p class="text-indigo-300 font-medium text-sm">
-                            Anda login sebagai <span class="text-white font-black uppercase bg-indigo-800 px-3 py-1 rounded-lg ml-1">Administrator</span>.
+                        <h3 class="text-3xl font-black uppercase tracking-tighter mb-2 text-white">
+                            Selamat Datang, <span class="gradient-text">{{ Auth::user()->name }}</span>!
+                        </h3>
+                        <p class="text-white/50 font-medium text-sm">
+                            Anda login sebagai <span class="font-black uppercase bg-purple-500/20 text-purple-300 px-3 py-1 rounded-lg ml-1 border border-purple-500/30">Administrator</span>.
                             Pusat kendali seluruh sistem Orbit Digital Printing.
                         </p>
                     </div>
-                    <a href="{{ route('admin.pegawai.index') }}" class="hidden md:flex items-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-black text-xs uppercase tracking-widest transition">
+                    <a href="{{ route('admin.pegawai.index') }}" class="hidden md:flex items-center gap-2 cosmic-btn">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         Kelola Pegawai
                     </a>
                 </div>
             </div>
 
-            {{-- Notifikasi Stok Menipis --}}
+            {{-- Stok Alert --}}
             @if($stats['total_stok_kritis'] > 0)
-            <div class="p-5 bg-red-50 border-2 border-red-200 text-red-700 rounded-3xl">
-                <div class="flex items-center gap-3">
-                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
-                    <div>
-                        <p class="font-black uppercase tracking-wider text-sm">Stok Bahan Baku Menipis!</p>
-                        <p class="text-sm font-medium mt-1">Terdapat {{ $stats['total_stok_kritis'] }} bahan yang stoknya di bawah batas minimum. Segera lakukan restock.</p>
-                    </div>
-                    <a href="{{ route('admin.bahan.index') }}" class="ml-auto px-4 py-2 bg-red-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-red-700 transition shrink-0">Lihat</a>
+            <div class="p-5 bg-red-500/10 border border-red-500/20 text-red-300 rounded-2xl backdrop-blur-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                 </div>
+                <div class="flex-1">
+                    <p class="font-black uppercase tracking-wider text-sm">Stok Bahan Baku Menipis!</p>
+                    <p class="text-sm font-medium mt-0.5 text-red-300/70">{{ $stats['total_stok_kritis'] }} bahan di bawah batas minimum.</p>
+                </div>
+                <a href="{{ route('admin.bahan.index') }}" class="px-4 py-2 bg-red-500/20 text-red-300 rounded-xl font-black text-xs uppercase tracking-wider hover:bg-red-500/30 transition border border-red-500/30 shrink-0">Lihat</a>
             </div>
             @endif
 
             {{-- Stat Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="{{ route('admin.pesanan.index') }}" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:-translate-y-1 transition-all relative overflow-hidden group">
+                <a href="{{ route('admin.pesanan.index') }}" class="stat-card group" style="--stat-color: rgba(59,130,246,0.5);">
                     @if($stats['pesanan_aktif'] > 0)
-                        <div class="absolute top-0 right-0 w-2 h-full bg-blue-400 animate-pulse"></div>
+                        <div class="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-blue-400 to-blue-600 rounded-r-2xl animate-pulse"></div>
                     @endif
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pesanan Aktif</p>
-                        <p class="text-2xl font-black text-gray-950">{{ $stats['pesanan_aktif'] }}</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0 border border-blue-500/20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest">Pesanan Aktif</p>
+                            <p class="text-2xl font-black text-white">{{ $stats['pesanan_aktif'] }}</p>
+                        </div>
                     </div>
                 </a>
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selesai</p>
-                        <p class="text-2xl font-black text-gray-950">{{ $stats['pesanan_selesai'] }}</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pelanggan</p>
-                        <p class="text-2xl font-black text-gray-950">{{ $stats['total_pelanggan'] }}</p>
+                <div class="stat-card" style="--stat-color: rgba(16,185,129,0.5);">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest">Selesai</p>
+                            <p class="text-2xl font-black text-white">{{ $stats['pesanan_selesai'] }}</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="stat-card" style="--stat-color: rgba(168,85,247,0.5);">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest">Pelanggan</p>
+                            <p class="text-2xl font-black text-white">{{ $stats['total_pelanggan'] }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pengeluaran (Bln Ini)</p>
-                        <p class="text-lg font-black text-gray-950">Rp{{ number_format($stats['pengeluaran_bulan_ini'], 0, ',', '.') }}</p>
+                </div>
+
+                <div class="stat-card" style="--stat-color: rgba(249,115,22,0.5);">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-orange-500/15 text-orange-400 flex items-center justify-center shrink-0 border border-orange-500/20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-white/30 uppercase tracking-widest">Pengeluaran (Bln Ini)</p>
+                            <p class="text-lg font-black text-white">Rp{{ number_format($stats['pengeluaran_bulan_ini'], 0, ',', '.') }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Quick Management Links --}}
+            {{-- Quick Management --}}
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="{{ route('admin.pegawai.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                @php
+                    $quickLinks = [
+                        ['route' => 'admin.pegawai.index', 'label' => 'Kelola Pegawai', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'color' => 'purple'],
+                        ['route' => 'admin.pelanggan.index', 'label' => 'Kelola Pelanggan', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'color' => 'cyan'],
+                        ['route' => 'admin.produk.index', 'label' => 'Kelola Produk', 'icon' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', 'color' => 'blue'],
+                        ['route' => 'admin.bahan.index', 'label' => 'Kelola Bahan', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', 'color' => 'amber'],
+                    ];
+                @endphp
+                @foreach($quickLinks as $ql)
+                <a href="{{ route($ql['route']) }}" class="glass-card p-5 text-center group">
+                    <div class="w-10 h-10 rounded-xl bg-{{ $ql['color'] }}-500/15 text-{{ $ql['color'] }}-400 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform border border-{{ $ql['color'] }}-500/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $ql['icon'] }}"/></svg>
                     </div>
-                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Pegawai</p>
+                    <p class="text-xs font-black uppercase tracking-wider text-white/70 group-hover:text-white transition-colors">{{ $ql['label'] }}</p>
                 </a>
-                <a href="{{ route('admin.pelanggan.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
-                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Pelanggan</p>
-                </a>
-                <a href="{{ route('admin.produk.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    </div>
-                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Produk</p>
-                </a>
-                <a href="{{ route('admin.bahan.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
-                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    </div>
-                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Bahan</p>
-                </a>
+                @endforeach
             </div>
 
-            {{-- Grafik Section --}}
+            {{-- Charts --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Grafik Omzet 7 Hari Terakhir</h4>
+                <div class="glass-card-static p-8">
+                    <h4 class="font-black text-white uppercase tracking-tighter mb-6">Grafik Omzet 7 Hari</h4>
                     <canvas id="omzetChart" height="200"></canvas>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Grafik Status Pesanan</h4>
+                <div class="glass-card-static p-8">
+                    <h4 class="font-black text-white uppercase tracking-tighter mb-6">Status Pesanan</h4>
                     <canvas id="statusChart" height="200"></canvas>
                 </div>
             </div>
 
-            {{-- Grafik Pengeluaran --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Pengeluaran per Kategori (Bulan Ini)</h4>
+                <div class="glass-card-static p-8">
+                    <h4 class="font-black text-white uppercase tracking-tighter mb-6">Pengeluaran per Kategori</h4>
                     <canvas id="pengeluaranChart" height="200"></canvas>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Pengeluaran 7 Hari Terakhir</h4>
+                <div class="glass-card-static p-8">
+                    <h4 class="font-black text-white uppercase tracking-tighter mb-6">Pengeluaran 7 Hari</h4>
                     <canvas id="pengeluaranLineChart" height="200"></canvas>
                 </div>
             </div>
 
-            {{-- Riwayat Login --}}
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Riwayat Login Staf</h4>
+            {{-- Login History --}}
+            <div class="glass-card-static p-8">
+                <h4 class="font-black text-white uppercase tracking-tighter mb-6">Riwayat Login Staf</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                    <table class="cosmic-table">
                         <thead>
-                            <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                <th class="pb-3">Nama</th>
-                                <th class="pb-3">Waktu Login</th>
-                                <th class="pb-3">IP Address</th>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Waktu Login</th>
+                                <th>IP Address</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody>
                             @forelse($stats['riwayat_login'] as $log)
-                            <tr class="text-sm">
-                                <td class="py-3 font-bold text-gray-900">{{ $log->user->name }}</td>
-                                <td class="py-3 text-gray-600">{{ $log->created_at->diffForHumans() }}</td>
-                                <td class="py-3 text-gray-500 font-mono text-xs">{{ $log->ip_address }}</td>
+                            <tr>
+                                <td class="font-bold text-white">{{ $log->user->name }}</td>
+                                <td class="text-white/50">{{ $log->created_at->diffForHumans() }}</td>
+                                <td class="text-white/30 font-mono text-xs">{{ $log->ip_address }}</td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="3" class="py-6 text-center text-gray-400 font-medium">Belum ada riwayat login.</td>
+                                <td colspan="3" class="py-8 text-center text-white/30 font-medium">Belum ada riwayat login.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -186,15 +188,15 @@
                 </div>
             </div>
 
-            {{-- Stok Menipis --}}
+            {{-- Low Stock --}}
             @if($stats['total_stok_kritis'] > 0)
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Bahan Baku Stok Menipis</h4>
+            <div class="glass-card-static p-8">
+                <h4 class="font-black text-white uppercase tracking-tighter mb-6">Bahan Baku Stok Menipis</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($stats['stok_menipis'] as $b)
-                    <div class="p-4 bg-red-50 rounded-2xl border border-red-100">
-                        <p class="font-black text-gray-900 uppercase text-sm">{{ $b->nama_bahan }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Stok: <span class="font-black text-red-600">{{ $b->stok }} {{ $b->satuan }}</span> (Min: {{ $b->minimum_stok }})</p>
+                    <div class="p-4 bg-red-500/5 rounded-xl border border-red-500/15">
+                        <p class="font-black text-white uppercase text-sm">{{ $b->nama_bahan }}</p>
+                        <p class="text-xs text-white/40 mt-1">Stok: <span class="font-black text-red-400">{{ $b->stok }} {{ $b->satuan }}</span> (Min: {{ $b->minimum_stok }})</p>
                     </div>
                     @endforeach
                 </div>
@@ -219,138 +221,54 @@
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
                 const key = d.toISOString().split('T')[0];
-                const dayName = d.toLocaleDateString('id-ID', { weekday: 'short' });
-                labels7.push(dayName);
+                labels7.push(d.toLocaleDateString('id-ID', { weekday: 'short' }));
                 values7.push(omzetData[key] || 0);
             }
 
-            const statusLabels = [];
-            const statusValues = [];
-            const statusColors = [];
+            const statusLabels = [], statusValues = [], statusColors = [];
             const colorMap = {
-                'Menunggu Pembayaran': '#f59e0b',
-                'Verifikasi': '#f97316',
-                'Antrean Cetak': '#3b82f6',
-                'Produksi': '#8b5cf6',
-                'Siap Ambil': '#10b981',
-                'Sedang Dikirim': '#06b6d4',
-                'Selesai': '#059669',
-                'Dibatalkan': '#ef4444',
+                'Menunggu Pembayaran': '#f59e0b', 'Verifikasi': '#f97316',
+                'Antrean Cetak': '#3b82f6', 'Produksi': '#a855f7',
+                'Siap Ambil': '#10b981', 'Sedang Dikirim': '#06b6d4',
+                'Selesai': '#059669', 'Dibatalkan': '#ef4444',
             };
             for (const [k, v] of Object.entries(statusData)) {
-                statusLabels.push(k);
-                statusValues.push(v);
-                statusColors.push(colorMap[k] || '#6b7280');
+                statusLabels.push(k); statusValues.push(v); statusColors.push(colorMap[k] || '#6b7280');
             }
+
+            Chart.defaults.color = 'rgba(255,255,255,0.4)';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
             new Chart(document.getElementById('omzetChart'), {
                 type: 'bar',
-                data: {
-                    labels: labels7,
-                    datasets: [{
-                        label: 'Omzet (Rp)',
-                        data: values7,
-                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
-                        borderColor: 'rgba(99, 102, 241, 1)',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(v) { return 'Rp' + v.toLocaleString('id-ID'); }
-                            }
-                        }
-                    }
-                }
+                data: { labels: labels7, datasets: [{ label: 'Omzet (Rp)', data: values7, backgroundColor: 'rgba(168, 85, 247, 0.5)', borderColor: 'rgba(168, 85, 247, 0.8)', borderWidth: 2, borderRadius: 8, hoverBackgroundColor: 'rgba(168, 85, 247, 0.7)' }] },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => 'Rp' + v.toLocaleString('id-ID') } } } }
             });
 
             new Chart(document.getElementById('statusChart'), {
                 type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{ data: statusValues, backgroundColor: statusColors, borderWidth: 0 }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 11, weight: 'bold' }, padding: 12 }
-                        }
-                    }
-                }
+                data: { labels: statusLabels, datasets: [{ data: statusValues, backgroundColor: statusColors, borderWidth: 0, hoverOffset: 8 }] },
+                options: { responsive: true, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, color: 'rgba(255,255,255,0.5)' } } } }
             });
 
-            const pKategoriLabels = Object.keys(pengeluaranKategori);
-            const pKategoriValues = Object.values(pengeluaranKategori);
-            const warnaKategori = ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#6366f1', '#6b7280'];
-
+            const pKLabels = Object.keys(pengeluaranKategori), pKValues = Object.values(pengeluaranKategori);
             new Chart(document.getElementById('pengeluaranChart'), {
                 type: 'pie',
-                data: {
-                    labels: pKategoriLabels,
-                    datasets: [{
-                        data: pKategoriValues,
-                        backgroundColor: warnaKategori.slice(0, pKategoriLabels.length),
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 10, weight: 'bold' }, padding: 10 }
-                        }
-                    }
-                }
+                data: { labels: pKLabels, datasets: [{ data: pKValues, backgroundColor: ['#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#3b82f6','#a855f7','#ec4899','#6366f1','#6b7280'], borderWidth: 0 }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, color: 'rgba(255,255,255,0.5)' } } } }
             });
 
-            const pLabels7 = [];
-            const pValues7 = [];
+            const pLabels7 = [], pValues7 = [];
             for (let i = 6; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                const key = d.toISOString().split('T')[0];
-                const dayName = d.toLocaleDateString('id-ID', { weekday: 'short' });
-                pLabels7.push(dayName);
-                pValues7.push(pengeluaran7Hari[key] || 0);
+                const d = new Date(today); d.setDate(d.getDate() - i);
+                pLabels7.push(d.toLocaleDateString('id-ID', { weekday: 'short' }));
+                pValues7.push(pengeluaran7Hari[d.toISOString().split('T')[0]] || 0);
             }
-
             new Chart(document.getElementById('pengeluaranLineChart'), {
                 type: 'line',
-                data: {
-                    labels: pLabels7,
-                    datasets: [{
-                        label: 'Pengeluaran (Rp)',
-                        data: pValues7,
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(v) { return 'Rp' + v.toLocaleString('id-ID'); }
-                            }
-                        }
-                    }
-                }
+                data: { labels: pLabels7, datasets: [{ label: 'Pengeluaran (Rp)', data: pValues7, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', borderWidth: 2, fill: true, tension: 0.4, pointBackgroundColor: '#ef4444', pointBorderColor: '#ef4444', pointRadius: 4, pointHoverRadius: 6 }] },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => 'Rp' + v.toLocaleString('id-ID') } } } }
             });
-
         });
     </script>
     @endpush

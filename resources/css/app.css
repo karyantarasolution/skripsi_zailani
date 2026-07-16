@@ -28,7 +28,21 @@
 
     body {
         background: var(--cosmic-deep);
-        color: #e2e8f0;
+        color: #f1f5f9;
+    }
+
+    input:not(.glass-input):not([type="checkbox"]):not([type="radio"]),
+    select:not(.cosmic-select),
+    textarea:not(.cosmic-textarea) {
+        color: #1f2937;
+    }
+
+    th {
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #6b7280;
     }
 }
 
@@ -93,7 +107,7 @@
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.75rem;
-        color: #e2e8f0;
+        color: #ffffff;
         transition: all 0.3s ease;
     }
 
@@ -105,7 +119,7 @@
     }
 
     .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.5);
     }
 
     .cosmic-btn {
@@ -250,7 +264,7 @@
     .cosmic-table tbody td {
         padding: 0.75rem 1rem;
         font-size: 0.875rem;
-        color: #cbd5e1;
+        color: #e2e8f0;
     }
 
     .neon-border {
@@ -267,7 +281,7 @@
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.75rem;
-        color: #e2e8f0;
+        color: #ffffff;
         padding: 0.75rem 1rem;
         font-weight: 700;
         transition: all 0.3s ease;
@@ -284,14 +298,14 @@
     }
     .cosmic-select option {
         background: #1a1a4e;
-        color: #e2e8f0;
+        color: #ffffff;
     }
 
     .cosmic-textarea {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.75rem;
-        color: #e2e8f0;
+        color: #ffffff;
         padding: 0.75rem 1rem;
         font-weight: 700;
         transition: all 0.3s ease;
@@ -304,7 +318,7 @@
         outline: none;
     }
     .cosmic-textarea::placeholder {
-        color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.5);
     }
 }
 
@@ -459,7 +473,7 @@
 /* Cosmic file input */
 .cosmic-file-input {
     font-size: 0.8rem;
-    color: rgba(196, 181, 253, 0.8);
+    color: rgba(224, 212, 255, 1);
 }
 .cosmic-file-input::file-selector-button {
     margin-right: 1rem;

@@ -55,7 +55,7 @@
                     <h1 class="text-6xl lg:text-8xl font-extrabold leading-none tracking-tighter">
                         Cetak Ide Anda <br> <span class="gradient-text">Jadi Nyata.</span>
                     </h1>
-                    <p class="text-xl text-white/50 max-w-2xl mx-auto leading-relaxed font-medium">
+                    <p class="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed font-medium">
                         Kualitas tajam, warna akurat, dan pengerjaan tepat waktu. Orbit Digital Printing siap melayani segala kebutuhan cetak Anda.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -72,7 +72,7 @@
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
                     <div class="space-y-2">
                         <h2 class="text-4xl font-extrabold tracking-tight italic uppercase">Produk <span class="gradient-text">Unggulan</span></h2>
-                        <p class="text-white/40 font-medium">Layanan cetak paling populer pilihan pelanggan kami.</p>
+                        <p class="text-white/70 font-medium">Layanan cetak paling populer pilihan pelanggan kami.</p>
                     </div>
                 </div>
 
@@ -90,10 +90,10 @@
                             </div>
                             <div class="px-3 pb-3">
                                 <h3 class="font-bold group-hover:text-purple-300 transition-colors uppercase tracking-tight text-lg text-white">{{ $item->nama_produk }}</h3>
-                                <p class="text-xs text-white/30 mt-1 font-bold tracking-widest uppercase italic">{{ $item->bahanBaku->pluck('nama_bahan')->implode(', ') ?: 'Material Custom' }}</p>
+                                <p class="text-xs text-white/60 mt-1 font-bold tracking-widest uppercase italic">{{ $item->bahanBaku->pluck('nama_bahan')->implode(', ') ?: 'Material Custom' }}</p>
                                 <div class="mt-8 flex justify-between items-center border-t border-white/[0.06] pt-4">
                                     <div class="flex flex-col">
-                                        <span class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Mulai Dari</span>
+                                        <span class="text-[10px] font-bold text-white/60 uppercase tracking-widest">Mulai Dari</span>
                                         <span class="text-xl font-extrabold text-white">Rp {{ number_format($item->harga_dasar, 0, ',', '.') }}</span>
                                     </div>
                                     <a href="{{ route('pesan.show', $item->id) }}" class="p-3 bg-purple-500/15 text-purple-300 rounded-xl hover:bg-purple-500/30 transition-all border border-purple-500/20">
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-span-full text-center py-24 glass-card-static border-2 border-dashed border-white/10 text-white/30 font-bold uppercase italic tracking-widest">
+                        <div class="col-span-full text-center py-24 glass-card-static border-2 border-dashed border-white/10 text-white/60 font-bold uppercase italic tracking-widest">
                             Data produk segera hadir.
                         </div>
                     @endforelse
@@ -116,7 +116,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16 space-y-4">
                     <h2 class="text-4xl font-extrabold tracking-tight italic uppercase">Testimoni <span class="gradient-text">Pelanggan</span></h2>
-                    <p class="text-white/40 font-medium">Apa kata mereka yang telah mencetak di Orbit Digital?</p>
+                    <p class="text-white/70 font-medium">Apa kata mereka yang telah mencetak di Orbit Digital?</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -136,12 +136,12 @@
                             </div>
                             <div>
                                 <h4 class="font-black text-white uppercase text-sm tracking-tight">{{ $ul->user->name }}</h4>
-                                <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Pelanggan Terverifikasi</p>
+                                <p class="text-[10px] font-bold text-white/60 uppercase tracking-widest">Pelanggan Terverifikasi</p>
                             </div>
                         </div>
                     </div>
                     @empty
-                    <div class="col-span-full text-center text-white/30 font-bold uppercase italic tracking-widest">Belum ada ulasan saat ini.</div>
+                    <div class="col-span-full text-center text-white/60 font-bold uppercase italic tracking-widest">Belum ada ulasan saat ini.</div>
                     @endforelse
                 </div>
             </div>
@@ -151,9 +151,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
                 <div class="flex flex-col items-center md:items-start space-y-4">
                     <img src="{{ asset('images/orbit.png') }}" class="h-10 w-auto" alt="Logo Footer">
-                    <p class="text-white/30 text-sm font-medium tracking-wide">&copy; {{ date('Y') }} Orbit Digital Printing. High Quality Output.</p>
+                    <p class="text-white/60 text-sm font-medium tracking-wide">&copy; {{ date('Y') }} Orbit Digital Printing. High Quality Output.</p>
                 </div>
-                <div class="flex space-x-8 text-sm font-bold text-white/40 uppercase">
+                <div class="flex space-x-8 text-sm font-bold text-white/60 uppercase">
                     <a href="#" class="hover:text-white transition">Instagram</a>
                     <a href="#" class="hover:text-white transition">WhatsApp</a>
                 </div>

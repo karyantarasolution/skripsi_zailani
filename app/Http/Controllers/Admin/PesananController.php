@@ -296,7 +296,15 @@ class PesananController extends Controller
         $bahan = BahanBaku::all();
         $pdf = Pdf::loadView('admin.laporan.stok_pdf', compact('bahan'))
                   ->setPaper('a4', 'portrait');
-        return $pdf->stream('Laporan-Stok-Orbit.pdf');
+        return $pdf->stream('Laporan-Stok-Bahan-Baku-Orbit.pdf');
+    }
+
+    public function laporanStokBarang()
+    {
+        $produk = \App\Models\Produk::with('bahanBaku')->get();
+        $pdf = Pdf::loadView('admin.laporan.stok_barang_pdf', compact('produk'))
+                  ->setPaper('a4', 'portrait');
+        return $pdf->stream('Laporan-Stok-Barang-Orbit.pdf');
     }
 
     public function laporanRetur()

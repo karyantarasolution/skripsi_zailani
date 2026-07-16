@@ -99,6 +99,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/laporan/top-pelanggan', [AdminPesananController::class, 'laporanTopPelanggan'])->name('laporan.topPelanggan');
     Route::get('/laporan/pembatalan', [AdminPesananController::class, 'laporanPembatalan'])->name('laporan.pembatalan');
     Route::get('/laporan/stok', [AdminPesananController::class, 'laporanStok'])->name('laporan.stok');
+    Route::get('/laporan/stok-barang', [AdminPesananController::class, 'laporanStokBarang'])->name('laporan.stokBarang');
     Route::get('/laporan/retur', [AdminPesananController::class, 'laporanRetur'])->name('laporan.retur');
     
     // Keep old route alias for backward compatibility

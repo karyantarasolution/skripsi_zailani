@@ -19,14 +19,14 @@
                 <img src="{{ asset('images/orbit.png') }}" class="h-10 w-auto">
                 <span class="text-xl font-black uppercase tracking-tighter text-white">Orbit <span class="gradient-text">Digital</span></span>
             </a>
-            <a href="/" class="text-xs font-black uppercase text-white/40 hover:text-white tracking-widest transition">Kembali ke Beranda</a>
+            <a href="/" class="text-xs font-black uppercase text-white/60 hover:text-white tracking-widest transition">Kembali ke Beranda</a>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-16 relative z-10">
         <div class="mb-16 text-center space-y-4">
             <h1 class="text-5xl font-black uppercase tracking-tighter italic">Katalog <span class="gradient-text">Lengkap</span></h1>
-            <p class="text-white/40 mt-2 font-medium">Solusi cetak profesional untuk segala media dan ukuran.</p>
+            <p class="text-white/60 mt-2 font-medium">Solusi cetak profesional untuk segala media dan ukuran.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -41,10 +41,10 @@
                     </div>
                     <div class="px-3 pb-3 text-center">
                         <h3 class="font-black uppercase text-lg group-hover:text-purple-300 transition-colors tracking-tight text-white">{{ $item->nama_produk }}</h3>
-                        <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest mt-1 italic">{{ $item->bahanBaku->pluck('nama_bahan')->implode(', ') ?: 'Material Custom' }}</p>
+                        <p class="text-[10px] font-bold text-white/60 uppercase tracking-widest mt-1 italic">{{ $item->bahanBaku->pluck('nama_bahan')->implode(', ') ?: 'Material Custom' }}</p>
                         
                         <div class="mt-6 pt-6 border-t border-white/[0.06]">
-                            <span class="text-[10px] font-bold text-white/30 block uppercase tracking-widest mb-1 italic">Mulai Dari</span>
+                            <span class="text-[10px] font-bold text-white/60 block uppercase tracking-widest mb-1 italic">Mulai Dari</span>
                             <span class="text-2xl font-black text-white tracking-tighter">Rp {{ number_format($item->harga_dasar, 0, ',', '.') }}</span>
                         </div>
                         
@@ -54,7 +54,7 @@
                     </div>
                 </div>
             @empty
-                <div class="col-span-full text-center py-20 glass-card-static border-2 border-dashed border-white/10 text-white/30 font-bold uppercase italic tracking-widest">
+                <div class="col-span-full text-center py-20 glass-card-static border-2 border-dashed border-white/10 text-white/60 font-bold uppercase italic tracking-widest">
                     Belum ada layanan yang tersedia saat ini.
                 </div>
             @endforelse
@@ -63,7 +63,7 @@
 
     <footer class="py-12 mt-20 border-t border-white/[0.04]">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-xs font-bold text-white/30 uppercase tracking-widest italic">Orbit Digital Printing - Layanan Cetak Masa Kini</p>
+            <p class="text-xs font-bold text-white/60 uppercase tracking-widest italic">Orbit Digital Printing - Layanan Cetak Masa Kini</p>
         </div>
     </footer>
 </body>

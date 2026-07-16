@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">
-                Dashboard
+                Dashboard Admin
             </h2>
             <div class="flex items-center gap-3 text-sm">
                 <span class="text-gray-500 font-medium">{{ now()->isoFormat('dddd, D MMMM Y') }}</span>
@@ -26,15 +26,22 @@
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
-            
+
+            {{-- Welcome Banner --}}
             <div class="bg-indigo-950 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden border border-indigo-900">
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600 rounded-full blur-3xl opacity-20"></div>
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Selamat Datang, {{ Auth::user()->name }}!</h3>
-                    <p class="text-indigo-300 font-medium text-sm">
-                        Anda login sebagai <span class="text-white font-black uppercase bg-indigo-800 px-3 py-1 rounded-lg ml-1">{{ Auth::user()->role == 'admin' ? 'Administrator' : 'Pegawai' }}</span>. 
-                        Berikut adalah ringkasan operasional toko.
-                    </p>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Selamat Datang, {{ Auth::user()->name }}!</h3>
+                        <p class="text-indigo-300 font-medium text-sm">
+                            Anda login sebagai <span class="text-white font-black uppercase bg-indigo-800 px-3 py-1 rounded-lg ml-1">Administrator</span>.
+                            Pusat kendali seluruh sistem Orbit Digital Printing.
+                        </p>
+                    </div>
+                    <a href="{{ route('admin.pegawai.index') }}" class="hidden md:flex items-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-black text-xs uppercase tracking-widest transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Kelola Pegawai
+                    </a>
                 </div>
             </div>
 
@@ -98,6 +105,34 @@
                 </div>
             </div>
 
+            {{-- Quick Management Links --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="{{ route('admin.pegawai.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </div>
+                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Pegawai</p>
+                </a>
+                <a href="{{ route('admin.pelanggan.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Pelanggan</p>
+                </a>
+                <a href="{{ route('admin.produk.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    </div>
+                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Produk</p>
+                </a>
+                <a href="{{ route('admin.bahan.index') }}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    </div>
+                    <p class="text-xs font-black uppercase tracking-wider text-gray-700">Kelola Bahan</p>
+                </a>
+            </div>
+
             {{-- Grafik Section --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
@@ -123,7 +158,6 @@
             </div>
 
             {{-- Riwayat Login --}}
-            @if(Auth::user()->isAdmin())
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                 <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-6">Riwayat Login Staf</h4>
                 <div class="overflow-x-auto">
@@ -151,7 +185,6 @@
                     </table>
                 </div>
             </div>
-            @endif
 
             {{-- Stok Menipis --}}
             @if($stats['total_stok_kritis'] > 0)
@@ -254,7 +287,6 @@
                 }
             });
 
-            // Pengeluaran per kategori (pie)
             const pKategoriLabels = Object.keys(pengeluaranKategori);
             const pKategoriValues = Object.values(pengeluaranKategori);
             const warnaKategori = ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#6366f1', '#6b7280'];
@@ -280,7 +312,6 @@
                 }
             });
 
-            // Pengeluaran 7 hari (line)
             const pLabels7 = [];
             const pValues7 = [];
             for (let i = 6; i >= 0; i--) {

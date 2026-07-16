@@ -1,6 +1,6 @@
 <nav x-data="{ open: false, openLaporan: false, openData: false }" class="bg-indigo-900 text-white w-64 h-screen fixed left-0 top-0 hidden lg:flex flex-col shadow-2xl z-50">
     <div class="p-6 border-b border-indigo-800 flex-none">
-        <a href="{{ Auth::user()->isStaff() ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center space-x-3 group">
+        <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : (Auth::user()->isPegawai() ? route('pegawai.dashboard') : route('dashboard')) }}" class="flex items-center space-x-3 group">
             <div class="bg-white p-2 rounded-lg transform group-hover:rotate-12 transition-transform">
                 <img src="{{ asset('images/orbit.png') }}" class="h-8 w-8" alt="Logo">
             </div>
@@ -9,7 +9,8 @@
     </div>
 
     <div class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
-        @if(Auth::user()->isStaff())
+        @if(Auth::user()->isAdmin())
+            {{-- ==================== MENU ADMIN ==================== --}}
             @php
                 $notif_antrean = \App\Models\Pesanan::where('status', 'Antrean Cetak')->count();
                 $notif_selesai = \App\Models\Pesanan::where('status', 'Selesai')->count();
@@ -17,13 +18,15 @@
                 $notif_stok = \App\Models\BahanBaku::whereColumn('stok', '<=', 'minimum_stok')->count();
             @endphp
 
-            {{-- Dashboard --}}
+            <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mb-2 tracking-widest">Admin Panel</p>
+
+            {{-- Dashboard Admin --}}
             <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span class="font-medium">Dashboard</span>
+                <span class="font-medium">Dashboard Admin</span>
             </a>
 
-            {{-- Data Menu (Dropdown) --}}
+            {{-- Data Master (Dropdown) --}}
             <div class="relative">
                 <button @click="openData = !openData" class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-indigo-800 text-indigo-100 transition group">
                     <div class="flex items-center space-x-3">
@@ -34,12 +37,10 @@
                 </button>
 
                 <div x-show="openData" x-collapse class="mt-1 space-y-1 bg-indigo-950/50 rounded-2xl p-2 border border-indigo-800">
-                    @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.pegawai.index') }}" class="flex items-center space-x-2 px-4 py-2.5 text-xs font-bold text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition uppercase tracking-wider">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         Data Pegawai
                     </a>
-                    @endif
                     <a href="{{ route('admin.pelanggan.index') }}" class="flex items-center space-x-2 px-4 py-2.5 text-xs font-bold text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition uppercase tracking-wider">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Data Pelanggan
@@ -139,8 +140,67 @@
             </a>
             @endif
 
+        @elseif(Auth::user()->isPegawai())
+            {{-- ==================== MENU PEGAWAI ==================== --}}
+            @php
+                $notif_antrean = \App\Models\Pesanan::where('status', 'Antrean Cetak')->count();
+                $notif_selesai = \App\Models\Pesanan::where('status', 'Selesai')->count();
+                $notif_stok = \App\Models\BahanBaku::whereColumn('stok', '<=', 'minimum_stok')->count();
+            @endphp
+
+            <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mb-2 tracking-widest">Menu Pegawai</p>
+
+            {{-- Dashboard Pegawai --}}
+            <a href="{{ route('pegawai.dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('pegawai.dashboard') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="font-medium">Dashboard Saya</span>
+            </a>
+
+            {{-- Pesanan --}}
+            <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mt-4 mb-2 tracking-widest">Pesanan</p>
+
+            <a href="{{ route('admin.pesanan.index') }}" class="flex items-center justify-between space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.index') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="font-medium">Antrean Pesanan</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                    @if($notif_antrean > 0)
+                        <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-yellow-400 text-yellow-900 rounded-full">{{ $notif_antrean }}</span>
+                    @endif
+                </div>
+            </a>
+
+            <a href="{{ route('admin.pesanan.selesai') }}" class="flex items-center justify-between space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.pesanan.selesai') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <span class="font-medium">Riwayat Selesai</span>
+                </div>
+                @if($notif_selesai > 0)
+                    <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-emerald-400 text-emerald-900 rounded-full">{{ $notif_selesai }}</span>
+                @endif
+            </a>
+
+            {{-- Bahan Baku --}}
+            <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mt-4 mb-2 tracking-widest">Persediaan</p>
+
+            <a href="{{ route('admin.bahan.index') }}" class="flex items-center justify-between space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.bahan.*') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <span class="font-medium">Data Bahan Baku</span>
+                </div>
+                @if($notif_stok > 0)
+                    <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-[10px] font-black bg-red-400 text-red-900 rounded-full">{{ $notif_stok }}</span>
+                @endif
+            </a>
+
+            <a href="{{ route('admin.bahan-masuk-keluar.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('admin.bahan-masuk-keluar.*') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                <span class="font-medium">Bahan Masuk/Keluar</span>
+            </a>
+
         @else
-            {{-- Menu Pelanggan --}}
+            {{-- ==================== MENU PELANGGAN ==================== --}}
             <p class="text-[10px] font-black text-indigo-400 uppercase px-2 mb-4 tracking-widest">Menu Pelanggan</p>
 
             <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl transition {{ request()->routeIs('dashboard') ? 'bg-indigo-700 text-white' : 'hover:bg-indigo-800 text-indigo-100' }}">
@@ -178,7 +238,9 @@
             @endif
             <div class="flex-1 overflow-hidden">
                 <p class="text-sm font-bold truncate group-hover:text-indigo-200 transition-colors">{{ Auth::user()->name }}</p>
-                <p class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest group-hover:text-indigo-300">Edit Profil & Sandi</p>
+                <p class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest group-hover:text-indigo-300">
+                    {{ Auth::user()->isAdmin() ? 'Administrator' : (Auth::user()->isPegawai() ? 'Pegawai' : 'Pelanggan') }}
+                </p>
             </div>
         </a>
         

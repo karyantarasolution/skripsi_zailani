@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PegawaiDashboardController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\BahanBakuController;
@@ -44,11 +45,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/pesanan/{id}/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
 });
 
+// Pegawai Dashboard (akses untuk admin & pegawai)
+Route::middleware(['auth', 'admin'])->prefix('pegawai')->name('pegawai.')->group(function () {
+    Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
+});
+
+// Admin Routes (akses untuk admin & pegawai)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Data Pegawai
+    // Data Pegawai (hanya admin)
     Route::resource('pegawai', PegawaiController::class)->except(['create', 'show', 'edit']);
     
     // Data Pelanggan

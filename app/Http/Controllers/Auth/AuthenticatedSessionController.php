@@ -29,8 +29,12 @@ class AuthenticatedSessionController extends Controller
             'tipe' => 'login',
         ]);
 
-        if (in_array($request->user()->role, ['admin', 'pegawai'])) {
+        if ($request->user()->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
+        }
+
+        if ($request->user()->role === 'pegawai') {
+            return redirect()->intended(route('pegawai.dashboard'));
         }
 
         return redirect()->intended(route('dashboard'));

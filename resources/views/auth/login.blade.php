@@ -3,10 +3,10 @@
         {{-- Left Panel - Cosmic --}}
         <div class="hidden lg:flex lg:w-1/2 justify-center items-center relative overflow-hidden guest-cosmic">
             @php
-                $officePhoto = public_path('images/kantor-orbit.jpg');
+                $officePhoto = public_path('images/bglogin.jpeg');
                 $photoUrl = asset('images/orbit.png');
                 if (file_exists($officePhoto)) {
-                    $photoUrl = asset('images/kantor-orbit.jpg');
+                    $photoUrl = asset('images/bglogin.jpeg');
                 }
             @endphp
             <img src="{{ $photoUrl }}" 

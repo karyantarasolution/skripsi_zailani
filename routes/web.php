@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/riwayat-pesanan/{id}', [PesananController::class, 'showRiwayat'])->name('pesanan.detail');
     Route::get('/riwayat-pesanan/{id}/cetak', [PesananController::class, 'cetakInvoice'])->name('pesanan.cetak');
     Route::post('/pesanan/{id}/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::post('/pesanan/{id}/konfirmasi', [PesananController::class, 'konfirmasiPesanan'])->name('pesanan.konfirmasi');
 });
 
 // Pegawai Dashboard (akses untuk admin & pegawai)

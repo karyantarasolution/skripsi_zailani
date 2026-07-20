@@ -260,6 +260,38 @@
                                                 Pesanan akan siap.
                                             @endif
                                         </p>
+
+                                        @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) && !$pesanan->konfirmasi_pelanggan)
+                                            <form action="{{ route('pesanan.konfirmasi', $pesanan->id) }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3" x-data="{ uploading: false }" @submit="uploading = true">
+                                                @csrf
+                                                <div class="p-3 bg-cyan-500/10 rounded-xl border border-cyan-400/20">
+                                                    <label class="block text-[10px] font-black text-cyan-300 uppercase tracking-widest mb-2">Upload Bukti Pengambilan/Penerimaan</label>
+                                                    <input type="file" name="bukti_konfirmasi" accept="image/*" required
+                                                        class="block w-full text-xs text-cyan-200 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-cyan-500/30 file:text-cyan-300 hover:file:bg-cyan-500/40 file:cursor-pointer file:transition">
+                                                </div>
+                                                <button type="submit" :disabled="uploading" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white text-[10px] font-black uppercase rounded-xl hover:from-cyan-400 hover:to-cyan-500 transition shadow-lg shadow-cyan-500/30 disabled:opacity-50 flex items-center justify-center gap-2">
+                                                    <span x-show="!uploading" class="flex items-center gap-2">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                        Konfirmasi Sudah Diambil/Diterima
+                                                    </span>
+                                                    <span x-show="uploading" x-cloak class="flex items-center gap-2">
+                                                        <svg class="animate-spin h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                                        Mengirim...
+                                                    </span>
+                                                </button>
+                                            </form>
+                                        @elseif($pesanan->konfirmasi_pelanggan)
+                                            <div class="mt-3 p-3 bg-emerald-500/10 rounded-xl border border-emerald-400/20 text-center">
+                                                <svg class="w-6 h-6 text-emerald-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                <p class="text-[10px] font-black text-emerald-300 uppercase tracking-widest">Terkonfirmasi oleh Pelanggan</p>
+                                            </div>
+                                            @if($pesanan->bukti_konfirmasi)
+                                                <div class="mt-2">
+                                                    <p class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Bukti Pengambilan</p>
+                                                    <img src="{{ asset('storage/'.$pesanan->bukti_konfirmasi) }}" class="w-full rounded-xl border border-white/10">
+                                                </div>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
 

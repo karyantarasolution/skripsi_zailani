@@ -116,6 +116,31 @@
                         </div>
                     </div>
 
+                    @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']))
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="font-black text-gray-950 uppercase mb-6 tracking-tighter">Konfirmasi Pelanggan</h3>
+                        @if($pesanan->konfirmasi_pelanggan)
+                            <div class="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-center mb-4">
+                                <svg class="w-10 h-10 text-emerald-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <p class="font-black text-emerald-700 uppercase">Sudah Dikonfirmasi</p>
+                                <p class="text-sm font-bold text-emerald-600 mt-1">Pelanggan sudah mengambil/menerima pesanan</p>
+                            </div>
+                            @if($pesanan->bukti_konfirmasi)
+                                <div>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Bukti Pengambilan</p>
+                                    <img src="{{ asset('storage/'.$pesanan->bukti_konfirmasi) }}" class="w-full rounded-2xl border border-gray-200 shadow-sm">
+                                </div>
+                            @endif
+                        @else
+                            <div class="p-4 bg-amber-50 border-2 border-amber-200 rounded-2xl text-center">
+                                <svg class="w-10 h-10 text-amber-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <p class="font-black text-amber-700 uppercase">Menunggu Konfirmasi</p>
+                                <p class="text-sm font-bold text-amber-600 mt-1">Pelanggan belum mengkonfirmasi pengambilan/penerimaan</p>
+                            </div>
+                        @endif
+                    </div>
+                    @endif
+
                     <div class="bg-indigo-950 p-8 rounded-3xl shadow-xl">
                         <h3 class="font-black text-white uppercase mb-6 tracking-tighter">Update Status</h3>
                         
@@ -136,7 +161,12 @@
                                 <option value="Produksi" {{ $pesanan->status == 'Produksi' ? 'selected' : '' }}>Sedang Produksi (Dicetak)</option>
                                 <option value="Siap Ambil" {{ $pesanan->status == 'Siap Ambil' ? 'selected' : '' }}>Siap Ambil di Toko</option>
                                 <option value="Sedang Dikirim" {{ $pesanan->status == 'Sedang Dikirim' ? 'selected' : '' }}>Paket Sedang Dikirim</option>
-                                <option value="Selesai" {{ $pesanan->status == 'Selesai' ? 'selected' : '' }}>Transaksi Selesai</option>
+                                @php
+                                    $canFinish = !in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) || $pesanan->konfirmasi_pelanggan;
+                                @endphp
+                                <option value="Selesai" {{ $pesanan->status == 'Selesai' ? 'selected' : '' }} {{ !$canFinish ? 'disabled' : '' }}>
+                                    Transaksi Selesai {{ !$canFinish ? '(Menunggu Konfirmasi Pelanggan)' : '' }}
+                                </option>
                                 <option value="Dibatalkan" {{ $pesanan->status == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
                             </select>
 

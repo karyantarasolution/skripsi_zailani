@@ -1,9 +1,16 @@
 <x-guest-layout>
     <div class="flex min-h-screen animate-fade-in">
         <div class="hidden lg:flex lg:w-1/2 justify-center items-center relative overflow-hidden guest-cosmic">
-            <img src="{{ asset('images/orbit.png') }}" 
-                 alt="Orbit Digital Printing" 
-                 class="absolute inset-0 w-full h-full object-cover scale-105 animate-subtle-zoom opacity-10"
+            @php
+                $officePhoto = public_path('images/bglogin.jpeg');
+                $photoUrl = asset('images/orbit.png');
+                if (file_exists($officePhoto)) {
+                    $photoUrl = asset('images/bglogin.jpeg');
+                }
+            @endphp
+            <img src="{{ $photoUrl }}" 
+                 alt="Kantor Orbit Digital Printing" 
+                 class="absolute inset-0 w-full h-full object-cover scale-105 animate-subtle-zoom opacity-30"
                  onerror="this.style.display='none'">
 
             <div class="absolute inset-0 bg-gradient-to-br from-purple-950/95 via-indigo-950/90 to-black/80"></div>

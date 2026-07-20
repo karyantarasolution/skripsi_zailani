@@ -18,6 +18,7 @@ use App\Mail\InvoicePesananMail;
 use Illuminate\Support\Facades\Log;
 use App\Services\FonnteService;
 use App\Models\User;
+use App\Models\RiwayatPesanan;
 class PesananController extends Controller
 {
 public function show(Produk $produk)
@@ -302,5 +303,37 @@ public function cetakInvoice($id)
 
         // Nama file saat didownload
         return $pdf->download('Invoice-' . $pesanan->nomor_invoice . '.pdf');
+    }
+
+    public function konfirmasiPesanan(Request $request, $id)
+    {
+        $pesanan = Pesanan::where('user_id', Auth::id())->findOrFail($id);
+
+        if (!in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim'])) {
+            return back()->with('error', 'Pesanan tidak dalam status yang bisa dikonfirmasi.');
+        }
+
+        if ($pesanan->konfirmasi_pelanggan) {
+            return back()->with('error', 'Pesanan sudah dikonfirmasi sebelumnya.');
+        }
+
+        $request->validate([
+            'bukti_konfirmasi' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        $pathBukti = $request->file('bukti_konfirmasi')->store('bukti_konfirmasi', 'public');
+
+        $pesanan->update([
+            'konfirmasi_pelanggan' => true,
+            'bukti_konfirmasi' => $pathBukti,
+        ]);
+
+        RiwayatPesanan::create([
+            'pesanan_id' => $pesanan->id,
+            'status_log' => $pesanan->status,
+            'catatan' => 'Pelanggan mengkonfirmasi sudah menerima pesanan.',
+        ]);
+
+        return back()->with('success', 'Konfirmasi berhasil! Admin akan segera memproses transaksi selesai.');
     }
 }

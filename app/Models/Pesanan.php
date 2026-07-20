@@ -21,6 +21,8 @@ class Pesanan extends Model
         'ongkir',
         'metode_pengiriman',
         'bukti_bayar',
+        'konfirmasi_pelanggan',
+        'bukti_konfirmasi',
         'status',
     ];
 

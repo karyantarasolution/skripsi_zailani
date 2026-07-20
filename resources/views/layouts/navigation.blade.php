@@ -123,7 +123,7 @@
                     <a href="{{ route('admin.laporan.pembatalan') }}" target="_blank" class="sidebar-item text-xs">5. Log Pembatalan</a>
                     <a href="{{ route('admin.laporan.stok') }}" target="_blank" class="sidebar-item text-xs">6. Laporan Stok Bahan Baku</a>
                     <a href="{{ route('admin.laporan.stokBarang') }}" target="_blank" class="sidebar-item text-xs">7. Laporan Stok Barang</a>
-                    <a href="{{ route('admin.laporan.retur') }}" target="_blank" class="sidebar-item text-xs">8. Laporan Retur</a>
+                    <a href="{{ route('admin.laporan.retur') }}" target="_blank" class="sidebar-item text-xs">8. Monitoring Pesanan</a>
                 </div>
             </div>
 

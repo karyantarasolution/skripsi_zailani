@@ -26,7 +26,7 @@
                     <div class="hidden md:flex items-center space-x-8 text-base font-bold">
                         <a href="#" class="text-white/70 hover:text-white transition">Beranda</a>
                         <a href="{{ route('katalog.index') }}" class="text-white/70 hover:text-white transition">Katalog</a>
-                        <a href="#" class="text-white/70 hover:text-white transition">Tentang Kami</a>
+                        <a href="{{ route('tentang-kami') }}" class="text-white/70 hover:text-white transition">Tentang Kami</a>
                         
                         @if (Route::has('login'))
                             <div class="flex items-center space-x-4">

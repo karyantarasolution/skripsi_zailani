@@ -309,13 +309,33 @@ class PesananController extends Controller
 
     public function laporanRetur()
     {
-        $retur = Pesanan::with('user')
-                ->where('status', 'Dibatalkan')
-                ->latest()
-                ->get();
-                
-        $pdf = Pdf::loadView('admin.laporan.retur_pdf', compact('retur'))
+        $semuaPesanan = Pesanan::with('user')->latest()->get();
+
+        $totalOrder = $semuaPesanan->count();
+        $totalOmzet = $semuaPesanan->where('status', 'Selesai')->sum('total_bayar');
+        $orderAktif = $semuaPesanan->whereNotIn('status', ['Selesai', 'Dibatalkan'])->count();
+
+        $perStatus = $semuaPesanan->groupBy('status')->map(function($items, $status) {
+            return [
+                'jumlah' => $items->count(),
+                'total' => $items->sum('total_bayar'),
+            ];
+        })->toArray();
+
+        $perBulan = $semuaPesanan->groupBy(function($item) {
+            return $item->created_at->format('Y-m');
+        })->map(function($items, $bulan) {
+            return [
+                'label' => \Carbon\Carbon::parse($bulan.'-01')->translatedFormat('F Y'),
+                'jumlah' => $items->count(),
+                'total' => $items->sum('total_bayar'),
+            ];
+        })->values()->take(6);
+
+        $pesananTerbaru = $semuaPesanan->take(10);
+
+        $pdf = Pdf::loadView('admin.laporan.retur_pdf', compact('semuaPesanan', 'totalOrder', 'totalOmzet', 'orderAktif', 'perStatus', 'perBulan', 'pesananTerbaru'))
                   ->setPaper('a4', 'portrait');
-        return $pdf->stream('Laporan-Retur-Orbit.pdf');
+        return $pdf->stream('Monitoring-Pesanan-Orbit.pdf');
     }
 }

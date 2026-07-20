@@ -25,6 +25,10 @@ Route::get('/', function () {
 
 Route::get('/katalog-layanan', [KatalogController::class, 'index'])->name('katalog.index');
 
+Route::get('/tentang-kami', function () {
+    return view('tentang-kami');
+})->name('tentang-kami');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

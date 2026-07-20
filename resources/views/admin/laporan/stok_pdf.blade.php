@@ -31,6 +31,7 @@
             <tr>
                 <th>Nama Bahan Baku</th>
                 <th>Sisa Stok Saat Ini</th>
+                <th>Batas Minimum</th>
                 <th>Satuan</th>
                 <th>Status Audit</th>
             </tr>
@@ -40,9 +41,10 @@
             <tr>
                 <td style="font-weight: bold;">{{ $b->nama_bahan }}</td>
                 <td>{{ $b->stok }}</td>
-                <td>Meter / Pcs</td>
-                <td class="{{ $b->stok <= 5 ? 'stok-kritis' : 'stok-aman' }}">
-                    {{ $b->stok <= 5 ? '⚠️ KRITIS - Perlu Restock' : '✓ AMAN' }}
+                <td>{{ $b->minimum_stok }}</td>
+                <td>{{ $b->satuan }}</td>
+                <td class="{{ $b->stok <= $b->minimum_stok ? 'stok-kritis' : 'stok-aman' }}">
+                    {{ $b->stok <= $b->minimum_stok ? 'KRITIS - Perlu Restock (Min: '.$b->minimum_stok.')' : 'AMAN' }}
                 </td>
             </tr>
             @endforeach

@@ -43,11 +43,7 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Grafik Kategori</p>
-                        <div class="flex gap-1 mt-1">
-                            @foreach($grafikKategori as $k => $v)
-                                <div class="w-4 h-4 rounded" style="background: {{ ['#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#3b82f6','#8b5cf6','#ec4899'][$loop->index % 8] }}" title="{{ $k }}"></div>
-                            @endforeach
-                        </div>
+                        <p class="text-xs font-bold text-gray-500 mt-1">{{ $grafikKategori->count() }} kategori aktif bulan ini</p>
                     </div>
                 </div>
             </div>
@@ -57,6 +53,16 @@
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-4">Pengeluaran per Kategori (Bulan Ini)</h4>
                 <canvas id="grafikKategori" height="150"></canvas>
+                <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-gray-100">
+                    @php $colors = ['#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#3b82f6','#8b5cf6','#ec4899','#6366f1','#6b7280']; @endphp
+                    @foreach($grafikKategori as $kategori => $total)
+                        <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+                            <div class="w-3 h-3 rounded-sm shrink-0" style="background: {{ $colors[$loop->index % count($colors)] }}"></div>
+                            <span class="text-xs font-bold text-gray-700">{{ $kategori }}</span>
+                            <span class="text-[10px] font-black text-gray-400">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                        </div>
+                    @endforeach
+                </div>
             </div>
             @endif
 
@@ -258,7 +264,17 @@
                     <template x-if="detailData.bukti">
                         <div>
                             <span class="text-gray-500 font-bold block mb-1">Bukti</span>
-                            <a :href="'{{ asset('storage') }}/' + detailData.bukti" target="_blank" class="text-indigo-600 font-bold underline">Lihat File</a>
+                            <template x-if="detailData.bukti.match(/\.(jpg|jpeg|png|gif|webp)$/i)">
+                                <a :href="'{{ asset('storage') }}/' + detailData.bukti" target="_blank">
+                                    <img :src="'{{ asset('storage') }}/' + detailData.bukti" class="w-full rounded-xl border border-gray-200 shadow-sm mt-1">
+                                </a>
+                            </template>
+                            <template x-if="!detailData.bukti.match(/\.(jpg|jpeg|png|gif|webp)$/i)">
+                                <a :href="'{{ asset('storage') }}/' + detailData.bukti" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 font-bold rounded-xl text-sm hover:bg-indigo-100 transition mt-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    Lihat PDF
+                                </a>
+                            </template>
                         </div>
                     </template>
                 </div>

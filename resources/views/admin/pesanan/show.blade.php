@@ -116,7 +116,7 @@
                         </div>
                     </div>
 
-                    @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']))
+                    @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim', 'Selesai']))
                     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                         <h3 class="font-black text-gray-950 uppercase mb-6 tracking-tighter">Konfirmasi Pelanggan</h3>
                         @if($pesanan->konfirmasi_pelanggan)
@@ -127,7 +127,7 @@
                             </div>
                             @if($pesanan->bukti_konfirmasi)
                                 <div>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Bukti Pengambilan</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Bukti Konfirmasi Pelanggan</p>
                                     <img src="{{ asset('storage/'.$pesanan->bukti_konfirmasi) }}" class="w-full rounded-2xl border border-gray-200 shadow-sm">
                                 </div>
                             @endif

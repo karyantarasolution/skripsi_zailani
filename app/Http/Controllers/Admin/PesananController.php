@@ -185,6 +185,7 @@ class PesananController extends Controller
         return $pdf->stream('SPK-' . $pesanan->nomor_invoice . '.pdf');
     }
 
+    // ===== WEB VIEW LAPORAN =====
     public function laporanPenjualan()
     {
         $pesanan = Pesanan::with('user')
@@ -192,12 +193,20 @@ class PesananController extends Controller
                     ->whereMonth('created_at', date('m'))
                     ->latest()
                     ->get();
-
         $totalOmzet = $pesanan->sum('total_bayar');
+        return view('admin.laporan.penjualan_web', compact('pesanan', 'totalOmzet'));
+    }
 
+    public function laporanPenjualanPdf()
+    {
+        $pesanan = Pesanan::with('user')
+                    ->where('status', 'Selesai')
+                    ->whereMonth('created_at', date('m'))
+                    ->latest()
+                    ->get();
+        $totalOmzet = $pesanan->sum('total_bayar');
         $pdf = Pdf::loadView('admin.laporan.penjualan_pdf', compact('pesanan', 'totalOmzet'))
                   ->setPaper('a4', 'landscape');
-                  
         return $pdf->stream('Laporan-Penjualan-'.date('M-Y').'.pdf');
     }
 
@@ -205,15 +214,12 @@ class PesananController extends Controller
     {
         $cekJumlah = \App\Models\BahanBaku::count();
         $cekFormula = DB::table('produk_bahan')->count();
-
         if ($cekJumlah == 0) {
-            return redirect()->route('admin.dashboard')->with('error', 'Tidak ada data bahan baku! Harap daftarkan bahan baku terlebih dahulu.');
+            return redirect()->route('admin.dashboard')->with('error', 'Tidak ada data bahan baku!');
         }
-
         if ($cekFormula == 0) {
-            return redirect()->route('admin.dashboard')->with('error', 'Formula bahan baku belum diatur! Silakan atur Formula Bahan di menu Data Produk → klik ikon roda gigi pada produk.');
+            return redirect()->route('admin.dashboard')->with('error', 'Formula bahan baku belum diatur!');
         }
-
         $rekapBahan = DB::table('detail_pesanan')
             ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')
             ->join('produk', 'detail_pesanan.produk_id', '=', 'produk.id')
@@ -240,10 +246,30 @@ class PesananController extends Controller
                 END) as total_pemakaian')
             ->groupBy('bahan_baku.nama_bahan', 'bahan_baku.satuan')
             ->get();
+        return view('admin.laporan.bahan_web', compact('rekapBahan'));
+    }
 
-        $pdf = Pdf::loadView('admin.laporan.bahan_pdf', compact('rekapBahan'))
-                  ->setPaper('a4', 'portrait');
-                  
+    public function laporanBahanPdf()
+    {
+        $rekapBahan = DB::table('detail_pesanan')
+            ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')
+            ->join('produk', 'detail_pesanan.produk_id', '=', 'produk.id')
+            ->join('produk_bahan', 'produk.id', '=', 'produk_bahan.produk_id')
+            ->join('bahan_baku', 'produk_bahan.bahan_baku_id', '=', 'bahan_baku.id')
+            ->whereIn('pesanan.status', ['Produksi', 'Siap Ambil', 'Sedang Dikirim', 'Selesai'])
+            ->selectRaw('bahan_baku.nama_bahan, bahan_baku.satuan,
+                SUM(CASE 
+                    WHEN produk_bahan.tipe_pengurangan = "per_meter" 
+                    THEN (
+                        (CASE WHEN produk.satuan = "cm" THEN detail_pesanan.panjang / 100.0 WHEN produk.satuan = "mm" THEN detail_pesanan.panjang / 1000.0 ELSE detail_pesanan.panjang END) *
+                        (CASE WHEN produk.satuan = "cm" THEN detail_pesanan.lebar / 100.0 WHEN produk.satuan = "mm" THEN detail_pesanan.lebar / 1000.0 ELSE detail_pesanan.lebar END) *
+                        produk_bahan.jumlah_digunakan * detail_pesanan.jumlah
+                    )
+                    ELSE (produk_bahan.jumlah_digunakan * detail_pesanan.jumlah)
+                END) as total_pemakaian')
+            ->groupBy('bahan_baku.nama_bahan', 'bahan_baku.satuan')
+            ->get();
+        $pdf = Pdf::loadView('admin.laporan.bahan_pdf', compact('rekapBahan'))->setPaper('a4', 'portrait');
         return $pdf->stream('Laporan-Pemakaian-Bahan.pdf');
     }
 
@@ -257,7 +283,19 @@ class PesananController extends Controller
             ->groupBy('produk.nama_produk')
             ->orderBy('total_qty', 'DESC')
             ->get();
+        return view('admin.laporan.terlaris_web', compact('produkTerlaris'));
+    }
 
+    public function laporanTerlarisPdf()
+    {
+        $produkTerlaris = DB::table('detail_pesanan')
+            ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')
+            ->join('produk', 'detail_pesanan.produk_id', '=', 'produk.id')
+            ->where('pesanan.status', 'Selesai')
+            ->selectRaw('produk.nama_produk, SUM(detail_pesanan.jumlah) as total_qty')
+            ->groupBy('produk.nama_produk')
+            ->orderBy('total_qty', 'DESC')
+            ->get();
         $pdf = Pdf::loadView('admin.laporan.terlaris_pdf', compact('produkTerlaris'));
         return $pdf->stream('Laporan-Produk-Terlaris.pdf');
     }
@@ -265,28 +303,37 @@ class PesananController extends Controller
     public function laporanTopPelanggan()
     {
         $topUsers = User::where('role', 'pelanggan')
-            ->withCount(['pesanan' => function($q) {
-                $q->where('status', 'Selesai');
-            }])
-            ->withSum(['pesanan' => function($q) {
-                $q->where('status', 'Selesai');
-            }], 'total_bayar')
+            ->withCount(['pesanan' => function($q) { $q->where('status', 'Selesai'); }])
+            ->withSum(['pesanan' => function($q) { $q->where('status', 'Selesai'); }], 'total_bayar')
             ->having('pesanan_count', '>', 0)
             ->orderBy('pesanan_sum_total_bayar', 'DESC')
             ->take(10)
             ->get();
+        return view('admin.laporan.top_pelanggan_web', compact('topUsers'));
+    }
 
+    public function laporanTopPelangganPdf()
+    {
+        $topUsers = User::where('role', 'pelanggan')
+            ->withCount(['pesanan' => function($q) { $q->where('status', 'Selesai'); }])
+            ->withSum(['pesanan' => function($q) { $q->where('status', 'Selesai'); }], 'total_bayar')
+            ->having('pesanan_count', '>', 0)
+            ->orderBy('pesanan_sum_total_bayar', 'DESC')
+            ->take(10)
+            ->get();
         $pdf = Pdf::loadView('admin.laporan.top_pelanggan_pdf', compact('topUsers'));
         return $pdf->stream('Laporan-Top-Pelanggan.pdf');
     }
 
     public function laporanPembatalan()
     {
-        $pembatalan = Pesanan::with('user')
-            ->where('status', 'Dibatalkan')
-            ->latest()
-            ->get();
+        $pembatalan = Pesanan::with('user')->where('status', 'Dibatalkan')->latest()->get();
+        return view('admin.laporan.pembatalan_web', compact('pembatalan'));
+    }
 
+    public function laporanPembatalanPdf()
+    {
+        $pembatalan = Pesanan::with('user')->where('status', 'Dibatalkan')->latest()->get();
         $pdf = Pdf::loadView('admin.laporan.pembatalan_pdf', compact('pembatalan'));
         return $pdf->stream('Laporan-Pembatalan.pdf');
     }
@@ -294,34 +341,38 @@ class PesananController extends Controller
     public function laporanStok()
     {
         $bahan = BahanBaku::all();
-        $pdf = Pdf::loadView('admin.laporan.stok_pdf', compact('bahan'))
-                  ->setPaper('a4', 'portrait');
+        return view('admin.laporan.stok_web', compact('bahan'));
+    }
+
+    public function laporanStokPdf()
+    {
+        $bahan = BahanBaku::all();
+        $pdf = Pdf::loadView('admin.laporan.stok_pdf', compact('bahan'))->setPaper('a4', 'portrait');
         return $pdf->stream('Laporan-Stok-Bahan-Baku-Orbit.pdf');
     }
 
     public function laporanStokBarang()
     {
         $produk = \App\Models\Produk::with('bahanBaku')->get();
-        $pdf = Pdf::loadView('admin.laporan.stok_barang_pdf', compact('produk'))
-                  ->setPaper('a4', 'portrait');
+        return view('admin.laporan.stok_barang_web', compact('produk'));
+    }
+
+    public function laporanStokBarangPdf()
+    {
+        $produk = \App\Models\Produk::with('bahanBaku')->get();
+        $pdf = Pdf::loadView('admin.laporan.stok_barang_pdf', compact('produk'))->setPaper('a4', 'portrait');
         return $pdf->stream('Laporan-Stok-Barang-Orbit.pdf');
     }
 
     public function laporanRetur()
     {
         $semuaPesanan = Pesanan::with('user')->latest()->get();
-
         $totalOrder = $semuaPesanan->count();
         $totalOmzet = $semuaPesanan->where('status', 'Selesai')->sum('total_bayar');
         $orderAktif = $semuaPesanan->whereNotIn('status', ['Selesai', 'Dibatalkan'])->count();
-
         $perStatus = $semuaPesanan->groupBy('status')->map(function($items, $status) {
-            return [
-                'jumlah' => $items->count(),
-                'total' => $items->sum('total_bayar'),
-            ];
+            return ['jumlah' => $items->count(), 'total' => $items->sum('total_bayar')];
         })->toArray();
-
         $perBulan = $semuaPesanan->groupBy(function($item) {
             return $item->created_at->format('Y-m');
         })->map(function($items, $bulan) {
@@ -331,9 +382,29 @@ class PesananController extends Controller
                 'total' => $items->sum('total_bayar'),
             ];
         })->values()->take(6);
-
         $pesananTerbaru = $semuaPesanan->take(10);
+        return view('admin.laporan.retur_web', compact('semuaPesanan', 'totalOrder', 'totalOmzet', 'orderAktif', 'perStatus', 'perBulan', 'pesananTerbaru'));
+    }
 
+    public function laporanReturPdf()
+    {
+        $semuaPesanan = Pesanan::with('user')->latest()->get();
+        $totalOrder = $semuaPesanan->count();
+        $totalOmzet = $semuaPesanan->where('status', 'Selesai')->sum('total_bayar');
+        $orderAktif = $semuaPesanan->whereNotIn('status', ['Selesai', 'Dibatalkan'])->count();
+        $perStatus = $semuaPesanan->groupBy('status')->map(function($items, $status) {
+            return ['jumlah' => $items->count(), 'total' => $items->sum('total_bayar')];
+        })->toArray();
+        $perBulan = $semuaPesanan->groupBy(function($item) {
+            return $item->created_at->format('Y-m');
+        })->map(function($items, $bulan) {
+            return [
+                'label' => \Carbon\Carbon::parse($bulan.'-01')->translatedFormat('F Y'),
+                'jumlah' => $items->count(),
+                'total' => $items->sum('total_bayar'),
+            ];
+        })->values()->take(6);
+        $pesananTerbaru = $semuaPesanan->take(10);
         $pdf = Pdf::loadView('admin.laporan.retur_pdf', compact('semuaPesanan', 'totalOrder', 'totalOmzet', 'orderAktif', 'perStatus', 'perBulan', 'pesananTerbaru'))
                   ->setPaper('a4', 'portrait');
         return $pdf->stream('Monitoring-Pesanan-Orbit.pdf');

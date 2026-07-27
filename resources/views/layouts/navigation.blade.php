@@ -60,25 +60,6 @@
                 </div>
             </div>
 
-            <p class="section-title mt-5 mb-3">Transaksi & Gudang</p>
-
-            <a href="{{ route('admin.transaksi.index') }}" class="sidebar-item {{ request()->routeIs('admin.transaksi.*') ? 'sidebar-item-active' : '' }}">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                <span class="font-medium">Data Transaksi</span>
-            </a>
-
-            <a href="{{ route('admin.bahan-masuk-keluar.index') }}" class="sidebar-item {{ request()->routeIs('admin.bahan-masuk-keluar.*') ? 'sidebar-item-active' : '' }}">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-                <span class="font-medium">Bahan Masuk/Keluar</span>
-            </a>
-
-            <a href="{{ route('admin.pengeluaran-operasional.index') }}" class="sidebar-item {{ request()->routeIs('admin.pengeluaran-operasional.*') ? 'sidebar-item-active' : '' }}">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span class="font-medium">Pengeluaran</span>
-            </a>
-
-            <p class="section-title mt-5 mb-3">Pesanan</p>
-
             <a href="{{ route('admin.pesanan.index') }}" class="sidebar-item justify-between {{ request()->routeIs('admin.pesanan.index') ? 'sidebar-item-active' : '' }}">
                 <div class="flex items-center space-x-3">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -94,14 +75,19 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.pesanan.selesai') }}" class="sidebar-item justify-between {{ request()->routeIs('admin.pesanan.selesai') ? 'sidebar-item-active' : '' }}">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    <span class="font-medium">Riwayat Selesai</span>
-                </div>
-                @if($notif_selesai > 0)
-                    <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[9px] font-black bg-emerald-400/90 text-emerald-900 rounded-full">{{ $notif_selesai }}</span>
-                @endif
+            <a href="{{ route('admin.transaksi.index') }}" class="sidebar-item {{ request()->routeIs('admin.transaksi.*') ? 'sidebar-item-active' : '' }}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                <span class="font-medium">Data Transaksi</span>
+            </a>
+
+            <a href="{{ route('admin.bahan-masuk-keluar.index') }}" class="sidebar-item {{ request()->routeIs('admin.bahan-masuk-keluar.*') ? 'sidebar-item-active' : '' }}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                <span class="font-medium">Bahan Keluar/Masuk</span>
+            </a>
+
+            <a href="{{ route('admin.pengeluaran-operasional.index') }}" class="sidebar-item {{ request()->routeIs('admin.pengeluaran-operasional.*') ? 'sidebar-item-active' : '' }}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span class="font-medium">Pengeluaran</span>
             </a>
 
             <p class="section-title mt-5 mb-3">Laporan</p>
@@ -116,14 +102,20 @@
                 </button>
 
                 <div x-show="openLaporan" x-collapse class="mt-1 space-y-1 ml-4 pl-3 border-l border-purple-500/20">
-                    <a href="{{ route('admin.laporan.penjualan') }}" target="_blank" class="sidebar-item text-xs">1. Penjualan & Omzet</a>
-                    <a href="{{ route('admin.laporan.bahan') }}" target="_blank" class="sidebar-item text-xs">2. Pemakaian Bahan</a>
-                    <a href="{{ route('admin.laporan.terlaris') }}" target="_blank" class="sidebar-item text-xs">3. Produk Terlaris</a>
-                    <a href="{{ route('admin.laporan.topPelanggan') }}" target="_blank" class="sidebar-item text-xs">4. Top Pelanggan</a>
-                    <a href="{{ route('admin.laporan.pembatalan') }}" target="_blank" class="sidebar-item text-xs">5. Log Pembatalan</a>
-                    <a href="{{ route('admin.laporan.stok') }}" target="_blank" class="sidebar-item text-xs">6. Laporan Stok Bahan Baku</a>
-                    <a href="{{ route('admin.laporan.stokBarang') }}" target="_blank" class="sidebar-item text-xs">7. Laporan Stok Barang</a>
-                    <a href="{{ route('admin.laporan.retur') }}" target="_blank" class="sidebar-item text-xs">8. Monitoring Pesanan</a>
+                    <a href="{{ route('admin.pesanan.selesai') }}" class="sidebar-item justify-between text-xs {{ request()->routeIs('admin.pesanan.selesai') ? 'sidebar-item-active' : '' }}">
+                        <span>1. Riwayat Selesai</span>
+                        @if($notif_selesai > 0)
+                            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[9px] font-black bg-emerald-400/90 text-emerald-900 rounded-full">{{ $notif_selesai }}</span>
+                        @endif
+                    </a>
+                    <a href="{{ route('admin.laporan.penjualan') }}" class="sidebar-item text-xs">2. Penjualan & Omzet</a>
+                    <a href="{{ route('admin.laporan.bahan') }}" class="sidebar-item text-xs">3. Pemakaian Bahan</a>
+                    <a href="{{ route('admin.laporan.terlaris') }}" class="sidebar-item text-xs">4. Produk Terlaris</a>
+                    <a href="{{ route('admin.laporan.topPelanggan') }}" class="sidebar-item text-xs">5. Top Pelanggan</a>
+                    <a href="{{ route('admin.laporan.pembatalan') }}" class="sidebar-item text-xs">6. Log Pembatalan</a>
+                    <a href="{{ route('admin.laporan.stok') }}" class="sidebar-item text-xs">7. Laporan Stok Bahan Baku</a>
+                    <a href="{{ route('admin.laporan.stokBarang') }}" class="sidebar-item text-xs">8. Laporan Stok Barang</a>
+                    <a href="{{ route('admin.laporan.retur') }}" class="sidebar-item text-xs">9. Monitoring Pesanan</a>
                 </div>
             </div>
 
@@ -149,8 +141,6 @@
                 <span class="font-medium">Dashboard Saya</span>
             </a>
 
-            <p class="section-title mt-5 mb-3">Pesanan</p>
-
             <a href="{{ route('admin.pesanan.index') }}" class="sidebar-item justify-between {{ request()->routeIs('admin.pesanan.index') ? 'sidebar-item-active' : '' }}">
                 <div class="flex items-center space-x-3">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -158,16 +148,6 @@
                 </div>
                 @if($notif_antrean > 0)
                     <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[9px] font-black bg-yellow-400/90 text-yellow-900 rounded-full">{{ $notif_antrean }}</span>
-                @endif
-            </a>
-
-            <a href="{{ route('admin.pesanan.selesai') }}" class="sidebar-item justify-between {{ request()->routeIs('admin.pesanan.selesai') ? 'sidebar-item-active' : '' }}">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    <span class="font-medium">Riwayat Selesai</span>
-                </div>
-                @if($notif_selesai > 0)
-                    <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[9px] font-black bg-emerald-400/90 text-emerald-900 rounded-full">{{ $notif_selesai }}</span>
                 @endif
             </a>
 
@@ -185,7 +165,7 @@
 
             <a href="{{ route('admin.bahan-masuk-keluar.index') }}" class="sidebar-item {{ request()->routeIs('admin.bahan-masuk-keluar.*') ? 'sidebar-item-active' : '' }}">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-                <span class="font-medium">Bahan Masuk/Keluar</span>
+                <span class="font-medium">Bahan Keluar/Masuk</span>
             </a>
 
         @else

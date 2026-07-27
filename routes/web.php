@@ -97,7 +97,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/pesanan/{id}/cetak-label', [AdminPesananController::class, 'cetakLabel'])->name('pesanan.cetakLabel');
     Route::get('/pesanan/{id}/cetak-spk', [AdminPesananController::class, 'cetakSPK'])->name('pesanan.cetakSPK');
 
-    // Laporan PDF
+    // Laporan (Web Views)
     Route::get('/laporan/penjualan', [AdminPesananController::class, 'laporanPenjualan'])->name('laporan.penjualan');
     Route::get('/laporan/bahan', [AdminPesananController::class, 'laporanBahan'])->name('laporan.bahan');
     Route::get('/laporan/terlaris', [AdminPesananController::class, 'laporanTerlaris'])->name('laporan.terlaris');
@@ -106,6 +106,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/laporan/stok', [AdminPesananController::class, 'laporanStok'])->name('laporan.stok');
     Route::get('/laporan/stok-barang', [AdminPesananController::class, 'laporanStokBarang'])->name('laporan.stokBarang');
     Route::get('/laporan/retur', [AdminPesananController::class, 'laporanRetur'])->name('laporan.retur');
+
+    // Laporan PDF
+    Route::get('/laporan/penjualan/pdf', [AdminPesananController::class, 'laporanPenjualanPdf'])->name('laporan.penjualan.pdf');
+    Route::get('/laporan/bahan/pdf', [AdminPesananController::class, 'laporanBahanPdf'])->name('laporan.bahan.pdf');
+    Route::get('/laporan/terlaris/pdf', [AdminPesananController::class, 'laporanTerlarisPdf'])->name('laporan.terlaris.pdf');
+    Route::get('/laporan/top-pelanggan/pdf', [AdminPesananController::class, 'laporanTopPelangganPdf'])->name('laporan.topPelanggan.pdf');
+    Route::get('/laporan/pembatalan/pdf', [AdminPesananController::class, 'laporanPembatalanPdf'])->name('laporan.pembatalan.pdf');
+    Route::get('/laporan/stok/pdf', [AdminPesananController::class, 'laporanStokPdf'])->name('laporan.stok.pdf');
+    Route::get('/laporan/stok-barang/pdf', [AdminPesananController::class, 'laporanStokBarangPdf'])->name('laporan.stokBarang.pdf');
+    Route::get('/laporan/retur/pdf', [AdminPesananController::class, 'laporanReturPdf'])->name('laporan.retur.pdf');
     
     // Keep old route alias for backward compatibility
     Route::get('/karyawan', [PegawaiController::class, 'index'])->name('karyawan.index');

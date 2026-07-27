@@ -261,7 +261,10 @@
                                             @endif
                                         </p>
 
-                                        @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) && !$pesanan->konfirmasi_pelanggan)
+                                        @php
+                                            $isAmbilToko = str_contains($pesanan->metode_pengiriman, 'Ambil di Toko');
+                                        @endphp
+                                        @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) && !$pesanan->konfirmasi_pelanggan && !$isAmbilToko)
                                             <form action="{{ route('pesanan.konfirmasi', $pesanan->id) }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3" x-data="{ uploading: false }" @submit="uploading = true">
                                                 @csrf
                                                 <div class="p-3 bg-cyan-500/10 rounded-xl border border-cyan-400/20">

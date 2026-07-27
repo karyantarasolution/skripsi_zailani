@@ -116,7 +116,10 @@
                         </div>
                     </div>
 
-                    @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim', 'Selesai']))
+                    @php
+                        $isAmbilToko = str_contains($pesanan->metode_pengiriman, 'Ambil di Toko');
+                    @endphp
+                    @if(in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim', 'Selesai']) && !$isAmbilToko)
                     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                         <h3 class="font-black text-gray-950 uppercase mb-6 tracking-tighter">Konfirmasi Pelanggan</h3>
                         @if($pesanan->konfirmasi_pelanggan)
@@ -162,7 +165,8 @@
                                 <option value="Siap Ambil" {{ $pesanan->status == 'Siap Ambil' ? 'selected' : '' }}>Siap Ambil di Toko</option>
                                 <option value="Sedang Dikirim" {{ $pesanan->status == 'Sedang Dikirim' ? 'selected' : '' }}>Paket Sedang Dikirim</option>
                                 @php
-                                    $canFinish = !in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) || $pesanan->konfirmasi_pelanggan;
+                                    $isAmbilToko = str_contains($pesanan->metode_pengiriman, 'Ambil di Toko');
+                                    $canFinish = !in_array($pesanan->status, ['Siap Ambil', 'Sedang Dikirim']) || $pesanan->konfirmasi_pelanggan || $isAmbilToko;
                                 @endphp
                                 <option value="Selesai" {{ $pesanan->status == 'Selesai' ? 'selected' : '' }} {{ !$canFinish ? 'disabled' : '' }}>
                                     Transaksi Selesai {{ !$canFinish ? '(Menunggu Konfirmasi Pelanggan)' : '' }}

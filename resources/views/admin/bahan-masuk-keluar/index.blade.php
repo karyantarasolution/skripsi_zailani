@@ -17,29 +17,7 @@
                 </div>
             @endif
 
-            {{-- Stat Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bahan Masuk</p>
-                        <p class="text-2xl font-black text-emerald-700">{{ $totalMasuk }}</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bahan Keluar</p>
-                        <p class="text-2xl font-black text-red-700">{{ $totalKeluar }}</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Filter & Add --}}
+            {{-- Filter & Add (PALING ATAS) --}}
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-6">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <form method="GET" class="flex flex-wrap items-end gap-3">
@@ -76,6 +54,28 @@
                     <button @click="modalAdd = true" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase text-xs tracking-widest rounded-xl transition shadow-lg transform active:scale-95">
                         + Catat Pergerakan
                     </button>
+                </div>
+            </div>
+
+            {{-- Stat Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bahan Masuk</p>
+                        <p class="text-2xl font-black text-emerald-700">{{ $totalMasuk }}</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bahan Keluar</p>
+                        <p class="text-2xl font-black text-red-700">{{ $totalKeluar }}</p>
+                    </div>
                 </div>
             </div>
 

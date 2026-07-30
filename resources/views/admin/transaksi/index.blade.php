@@ -6,6 +6,37 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
+            {{-- Filter (PALING ATAS) --}}
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+                <form method="GET" class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Cari</label>
+                        <input type="text" name="cari" value="{{ request('cari') }}" placeholder="Invoice / Pelanggan" class="rounded-xl border-gray-200 text-sm font-bold w-48">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</label>
+                        <select name="status" class="rounded-xl border-gray-200 text-sm font-bold">
+                            <option value="">Semua</option>
+                            @foreach(['Menunggu Pembayaran','Verifikasi','Antrean Cetak','Produksi','Siap Ambil','Sedang Dikirim','Selesai','Dibatalkan'] as $s)
+                                <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Dari</label>
+                        <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="rounded-xl border-gray-200 text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Sampai</label>
+                        <input type="date" name="tanggal_selesai" value="{{ request('tanggal_selesai') }}" class="rounded-xl border-gray-200 text-sm font-bold">
+                    </div>
+                    <button type="submit" class="px-4 py-2.5 bg-indigo-600 text-white font-black rounded-xl text-xs uppercase tracking-widest hover:bg-indigo-500 transition">Filter</button>
+                    @if(request()->anyFilled(['cari', 'status', 'tanggal_mulai', 'tanggal_selesai']))
+                        <a href="{{ route('admin.transaksi.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-black rounded-xl text-xs uppercase tracking-widest hover:bg-gray-200 transition">Reset</a>
+                    @endif
+                </form>
+            </div>
+
             {{-- Stat --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
@@ -35,37 +66,6 @@
                         <p class="text-xl font-black text-blue-700">{{ $transaksi->total() }}</p>
                     </div>
                 </div>
-            </div>
-
-            {{-- Filter --}}
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                <form method="GET" class="flex flex-wrap items-end gap-3">
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Cari</label>
-                        <input type="text" name="cari" value="{{ request('cari') }}" placeholder="Invoice / Pelanggan" class="rounded-xl border-gray-200 text-sm font-bold w-48">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</label>
-                        <select name="status" class="rounded-xl border-gray-200 text-sm font-bold">
-                            <option value="">Semua</option>
-                            @foreach(['Menunggu Pembayaran','Verifikasi','Antrean Cetak','Produksi','Siap Ambil','Sedang Dikirim','Selesai','Dibatalkan'] as $s)
-                                <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Dari</label>
-                        <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="rounded-xl border-gray-200 text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Sampai</label>
-                        <input type="date" name="tanggal_selesai" value="{{ request('tanggal_selesai') }}" class="rounded-xl border-gray-200 text-sm font-bold">
-                    </div>
-                    <button type="submit" class="px-4 py-2.5 bg-indigo-600 text-white font-black rounded-xl text-xs uppercase tracking-widest hover:bg-indigo-500 transition">Filter</button>
-                    @if(request()->anyFilled(['cari', 'status', 'tanggal_mulai', 'tanggal_selesai']))
-                        <a href="{{ route('admin.transaksi.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-black rounded-xl text-xs uppercase tracking-widest hover:bg-gray-200 transition">Reset</a>
-                    @endif
-                </form>
             </div>
 
             {{-- Table --}}

@@ -17,65 +17,7 @@
                 </div>
             @endif
 
-            {{-- Table (Data paling atas) --}}
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100">
-                    <h4 class="font-black text-gray-950 uppercase tracking-tighter">Data Pengeluaran</h4>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-400 text-[10px] uppercase tracking-widest">
-                                <th class="p-5 font-black">Tanggal</th>
-                                <th class="p-5 font-black">Kategori</th>
-                                <th class="p-5 font-black">Deskripsi</th>
-                                <th class="p-5 font-black text-right">Jumlah</th>
-                                <th class="p-5 font-black">Dicatat Oleh</th>
-                                <th class="p-5 font-black text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @foreach($pengeluaran as $p)
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="p-5 text-sm font-bold text-gray-900">{{ $p->tanggal->format('d/m/Y') }}</td>
-                                <td class="p-5">
-                                    <span class="px-3 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg uppercase">{{ $p->kategori }}</span>
-                                </td>
-                                <td class="p-5 text-sm text-gray-600 max-w-[250px] truncate">{{ $p->deskripsi ?? '-' }}</td>
-                                <td class="p-5 text-right font-black text-red-600 text-lg">Rp{{ number_format($p->jumlah, 0, ',', '.') }}</td>
-                                <td class="p-5 text-xs font-bold text-gray-600">{{ $p->user->name }}</td>
-                                <td class="p-5 text-center">
-                                    <div class="flex items-center justify-center gap-2">
-                                        <button @click="modalDetail = true; detailData = {{ $p->toJson() }}" class="p-2 bg-gray-50 text-gray-600 hover:bg-gray-900 hover:text-white rounded-xl transition" title="Detail">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                        </button>
-                                        <button @click="modalEdit = true; editData = {{ $p->toJson() }}" class="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-xl transition" title="Edit">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                                        </button>
-                                        <form action="{{ route('admin.pengeluaran-operasional.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Hapus pengeluaran ini?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition" title="Hapus">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                            @if($pengeluaran->isEmpty())
-                            <tr>
-                                <td colspan="6" class="p-8 text-center text-gray-400 font-medium">Belum ada data pengeluaran.</td>
-                            </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-                <div class="p-4">
-                    {{ $pengeluaran->links() }}
-                </div>
-            </div>
-
-            {{-- Filter & Add (Filter di tengah) --}}
+            {{-- Filter & Add (PALING ATAS) --}}
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <form method="GET" class="flex flex-wrap items-end gap-3">
@@ -138,7 +80,65 @@
                 </div>
             </div>
 
-            {{-- Grafik Pengeluaran per Kategori (Diagram paling bawah) --}}
+            {{-- Table --}}
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100">
+                    <h4 class="font-black text-gray-950 uppercase tracking-tighter">Data Pengeluaran</h4>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-400 text-[10px] uppercase tracking-widest">
+                                <th class="p-5 font-black">Tanggal</th>
+                                <th class="p-5 font-black">Kategori</th>
+                                <th class="p-5 font-black">Deskripsi</th>
+                                <th class="p-5 font-black text-right">Jumlah</th>
+                                <th class="p-5 font-black">Dicatat Oleh</th>
+                                <th class="p-5 font-black text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($pengeluaran as $p)
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-5 text-sm font-bold text-gray-900">{{ $p->tanggal->format('d/m/Y') }}</td>
+                                <td class="p-5">
+                                    <span class="px-3 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg uppercase">{{ $p->kategori }}</span>
+                                </td>
+                                <td class="p-5 text-sm text-gray-600 max-w-[250px] truncate">{{ $p->deskripsi ?? '-' }}</td>
+                                <td class="p-5 text-right font-black text-red-600 text-lg">Rp{{ number_format($p->jumlah, 0, ',', '.') }}</td>
+                                <td class="p-5 text-xs font-bold text-gray-600">{{ $p->user->name }}</td>
+                                <td class="p-5 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button @click="modalDetail = true; detailData = {{ $p->toJson() }}" class="p-2 bg-gray-50 text-gray-600 hover:bg-gray-900 hover:text-white rounded-xl transition" title="Detail">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        </button>
+                                        <button @click="modalEdit = true; editData = {{ $p->toJson() }}" class="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-xl transition" title="Edit">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                        </button>
+                                        <form action="{{ route('admin.pengeluaran-operasional.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Hapus pengeluaran ini?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition" title="Hapus">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @if($pengeluaran->isEmpty())
+                            <tr>
+                                <td colspan="6" class="p-8 text-center text-gray-400 font-medium">Belum ada data pengeluaran.</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4">
+                    {{ $pengeluaran->links() }}
+                </div>
+            </div>
+
+            {{-- Grafik Pengeluaran per Kategori --}}
             @if(count($grafikKategori) > 0)
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <h4 class="font-black text-gray-950 uppercase tracking-tighter mb-4">Pengeluaran per Kategori (Bulan Ini)</h4>

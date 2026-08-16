@@ -16,7 +16,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvoicePesananMail;
 use Illuminate\Support\Facades\Log;
-use App\Services\FonnteService;
 use App\Models\User;
 use App\Models\RiwayatPesanan;
 class PesananController extends Controller
@@ -237,35 +236,6 @@ public function show(Produk $produk)
             Log::error('Gagal kirim email invoice: ' . $e->getMessage());
         }
 
-        try {
-            $fonnte = new FonnteService();
-            $adminList = User::whereIn('role', ['admin', 'pegawai'])->get();
-
-            $totalFormat = 'Rp ' . number_format($pesanan->total_bayar, 0, ',', '.');
-            $items = $keranjang->detailKeranjang->map(fn($d) => ($d->produk->nama_produk ?? 'Produk') . ' (' . $d->jumlah . ' pcs)')->join(', ');
-
-            $paymentNote = $request->metode_pembayaran === 'Cash'
-                ? "Pembayaran: Cash (Langsung di toko)\n\nSegera proses pesanan di panel admin!"
-                : "Segera verifikasi pembayaran di panel admin!";
-
-            $message = "*PESANAN BARU* 🖨️\n\n"
-                . "Invoice: " . $pesanan->nomor_invoice . "\n"
-                . "Pelanggan: " . Auth::user()->name . "\n"
-                . "Item: " . $items . "\n"
-                . "Total: " . $totalFormat . "\n"
-                . "Pengiriman: " . $pesanan->metode_pengiriman . "\n\n"
-                . $paymentNote . "\n"
-                . url('/admin/pesanan/' . $pesanan->id);
-
-            foreach ($adminList as $admin) {
-                if (!empty($admin->telepon)) {
-                    $fonnte->sendMessage($admin->telepon, $message);
-                }
-            }
-        } catch (\Exception $e) {
-            Log::error('Gagal kirim WA notif ke admin: ' . $e->getMessage());
-        }
-
         $message = $request->metode_pembayaran === 'Cash'
             ? 'Pesanan berhasil dikirim! Silakan lakukan pembayaran di kasir toko. Invoice telah dikirim ke email Anda.'
             : 'Pesanan berhasil dikirim & menunggu verifikasi Kasir! Invoice telah dikirim ke email Anda.';
@@ -279,7 +249,9 @@ public function show(Produk $produk)
                           ->latest()
                           ->get();
 
-        return view('pesanan.riwayat', compact('pesanan'));
+        $adminPhone = User::where('role', 'admin')->value('telepon');
+
+        return view('pesanan.riwayat', compact('pesanan', 'adminPhone'));
     }
 
     // FUNGSI BARU: Untuk tombol "Cek Detail"
@@ -289,7 +261,9 @@ public function showRiwayat($id)
                 ->where('user_id', auth()->id())
                 ->findOrFail($id);
 
-    return view('pesanan.detail', compact('pesanan'));
+    $adminPhone = User::where('role', 'admin')->value('telepon');
+
+    return view('pesanan.detail', compact('pesanan', 'adminPhone'));
 }
 public function cetakInvoice($id)
     {

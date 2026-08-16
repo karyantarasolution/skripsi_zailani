@@ -76,6 +76,16 @@
                                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Telepon</p>
                                 <p class="font-bold text-gray-900">{{ $pesanan->user->telepon ?? 'Tidak ada' }}</p>
                             </div>
+                            @php
+                                $waStatusMessage = "Halo *" . $pesanan->user->name . "*, kami dari Orbit Digital Printing ingin memberitahu bahwa pesanan *" . $pesanan->nomor_invoice . "* Anda saat ini:\n*" . $pesanan->status . "*\n\nSilakan cek detail pesanan Anda:\n" . url('/riwayat-pesanan/' . $pesanan->id);
+                                $waCustomer = \App\Services\WhatsAppService::waLink($pesanan->user->telepon ?? '', $waStatusMessage);
+                            @endphp
+                            @if($waCustomer)
+                                <a href="{{ $waCustomer }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white text-[10px] font-black uppercase rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 00-8.4 15.17L2 22l4.96-1.6A9.9 9.9 0 1012.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.94 1.34-.5.04-1.13.21-3.8-.8-3.22-1.23-5.26-4.46-5.42-4.67-.16-.21-1.3-1.72-1.3-3.29 0-1.56.82-2.33 1.11-2.65.3-.32.64-.4.85-.4.21 0 .43 0 .61.01.2.01.46-.07.72.55.26.64.9 2.2.98 2.36.08.16.13.35.03.56-.1.21-.15.34-.3.53-.15.19-.32.42-.46.56-.15.15-.3.31-.13.61.17.3.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.07.17-.21.72-.84.92-1.13.2-.29.39-.24.66-.14.26.09 1.68.79 1.97.94.29.14.48.21.55.33.07.11.07.65-.17 1.33z"/></svg>
+                                    Kirim Update Status via WA
+                                </a>
+                            @endif
                             <div>
                                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Alamat</p>
                                 <p class="font-bold text-gray-900">{{ $pesanan->user->alamat ?? 'Ambil di Toko' }}</p>

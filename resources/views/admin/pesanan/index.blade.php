@@ -55,6 +55,15 @@
                                     @endif
                                 </td>
                                 <td class="px-8 py-6 text-center">
+                                    @php
+                                        $waListMessage = "Halo *" . $item->user->name . "*, kami dari Orbit Digital Printing ingin memberitahu bahwa pesanan *" . $item->nomor_invoice . "* Anda saat ini:\n*" . $item->status . "*\n\nSilakan cek detail pesanan Anda:\n" . url('/riwayat-pesanan/' . $item->id);
+                                        $waItem = \App\Services\WhatsAppService::waLink($item->user->telepon ?? '', $waListMessage);
+                                    @endphp
+                                    @if($waItem)
+                                        <a href="{{ $waItem }}" target="_blank" class="inline-flex items-center justify-center w-9 h-9 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30 mr-2" title="Chat WhatsApp Pelanggan">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 00-8.4 15.17L2 22l4.96-1.6A9.9 9.9 0 1012.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.94 1.34-.5.04-1.13.21-3.8-.8-3.22-1.23-5.26-4.46-5.42-4.67-.16-.21-1.3-1.72-1.3-3.29 0-1.56.82-2.33 1.11-2.65.3-.32.64-.4.85-.4.21 0 .43 0 .61.01.2.01.46-.07.72.55.26.64.9 2.2.98 2.36.08.16.13.35.03.56-.1.21-.15.34-.3.53-.15.19-.32.42-.46.56-.15.15-.3.31-.13.61.17.3.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.07.17-.21.72-.84.92-1.13.2-.29.39-.24.66-.14.26.09 1.68.79 1.97.94.29.14.48.21.55.33.07.11.07.65-.17 1.33z"/></svg>
+                                        </a>
+                                    @endif
                                     <a href="{{ route('admin.pesanan.show', $item->id) }}" class="inline-block px-6 py-2 bg-gray-950 text-white text-xs font-black uppercase rounded-xl hover:bg-indigo-600 transition shadow-lg">
                                         Proses
                                     </a>

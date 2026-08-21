@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-extrabold text-2xl text-gray-950 tracking-tight">Tambah Produk Baru</h2>
-        <p class="text-gray-500 text-sm mt-1">Pastikan informasi produk dan bahan baku sudah sesuai.</p>
+        <h2 class="font-extrabold text-2xl text-white tracking-tight">Tambah Produk Baru</h2>
+        <p class="text-indigo-200/70 text-sm mt-1">Pastikan informasi produk dan bahan baku sudah sesuai.</p>
     </x-slot>
 
     <div class="py-6">

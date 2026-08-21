@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">Bahan Masuk & Bahan Keluar</h2>
+        <h2 class="font-black text-2xl text-white uppercase tracking-tight">Bahan Masuk & Bahan Keluar</h2>
     </x-slot>
 
     <div class="py-12" x-data="{ modalAdd: false }">

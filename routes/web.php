@@ -24,6 +24,7 @@ Route::get('/', function () {
 });
 
 Route::get('/katalog-layanan', [KatalogController::class, 'index'])->name('katalog.index');
+Route::get('/katalog-layanan/{produk}', [KatalogController::class, 'show'])->name('katalog.show');
 
 Route::get('/tentang-kami', function () {
     return view('tentang-kami');

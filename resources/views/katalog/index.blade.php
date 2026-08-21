@@ -32,24 +32,24 @@
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
             @forelse($produk as $item)
                 <div class="glass-card p-3 group">
-                    <div class="h-56 rounded-2xl overflow-hidden mb-4 border border-white/[0.06] bg-white/[0.03] relative">
+                    <a href="{{ route('katalog.show', $item->id) }}" class="block h-56 rounded-2xl overflow-hidden mb-4 border border-white/[0.06] bg-white/[0.03] relative">
                         @if($item->gambar)
                             <img src="{{ asset('storage/'.$item->gambar) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-white/20 uppercase font-black text-[10px] italic">No Preview</div>
                         @endif
-                    </div>
+                    </a>
                     <div class="px-3 pb-3 text-center">
-                        <h3 class="font-black uppercase text-lg group-hover:text-purple-300 transition-colors tracking-tight text-white">{{ $item->nama_produk }}</h3>
+                        <a href="{{ route('katalog.show', $item->id) }}"><h3 class="font-black uppercase text-lg group-hover:text-purple-300 transition-colors tracking-tight text-white">{{ $item->nama_produk }}</h3></a>
                         <p class="text-[10px] font-bold text-white/60 uppercase tracking-widest mt-1 italic">{{ $item->bahanBaku->pluck('nama_bahan')->implode(', ') ?: 'Material Custom' }}</p>
-                        
+
                         <div class="mt-6 pt-6 border-t border-white/[0.06]">
                             <span class="text-[10px] font-bold text-white/60 block uppercase tracking-widest mb-1 italic">Mulai Dari</span>
                             <span class="text-2xl font-black text-white tracking-tighter">Rp {{ number_format($item->harga_dasar, 0, ',', '.') }}</span>
                         </div>
-                        
-                        <a href="{{ route('pesan.show', $item->id) }}" class="mt-6 block w-full py-4 cosmic-btn text-center rounded-2xl">
-                            Pesan Sekarang
+
+                        <a href="{{ route('katalog.show', $item->id) }}" class="mt-6 block w-full py-4 cosmic-btn text-center rounded-2xl">
+                            Lihat Detail & Pesan
                         </a>
                     </div>
                 </div>

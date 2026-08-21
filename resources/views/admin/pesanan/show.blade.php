@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-black text-2xl text-gray-900 uppercase tracking-tight">Detail Pesanan: {{ $pesanan->nomor_invoice }}</h2>
+        <h2 class="font-black text-2xl text-white uppercase tracking-tight">Detail Pesanan: {{ $pesanan->nomor_invoice }}</h2>
     </x-slot>
 <div class="flex flex-wrap gap-3 mt-4">
     <a href="{{ route('admin.pesanan.cetakSPK', $pesanan->id) }}" target="_blank" class="px-4 py-2 bg-gray-800 text-white text-xs font-black uppercase rounded-xl hover:bg-black transition">

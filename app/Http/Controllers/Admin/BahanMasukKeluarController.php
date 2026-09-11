@@ -55,7 +55,10 @@ class BahanMasukKeluarController extends Controller
         if ($request->jenis == 'masuk') {
             $stok_sesudah = $stok_sebelum + $request->jumlah;
         } else {
-            $stok_sesudah = max(0, $stok_sebelum - $request->jumlah);
+            if ($request->jumlah > $stok_sebelum) {
+                return back()->with('error', 'Stok bahan baku "' . $bahan->nama_bahan . '" tidak mencukupi! Stok tersedia: ' . number_format($stok_sebelum, 2) . ' ' . $bahan->satuan);
+            }
+            $stok_sesudah = $stok_sebelum - $request->jumlah;
         }
 
         $bahan->update(['stok' => $stok_sesudah]);

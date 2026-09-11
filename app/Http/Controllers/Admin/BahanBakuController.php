@@ -81,8 +81,10 @@ class BahanBakuController extends Controller
         } elseif($request->jenis == 'penyesuaian') {
             $stok_sesudah = $request->jumlah; // Penyesuaian = stok aktual (opname)
         } else {
+            if ($request->jumlah > $stok_sebelum) {
+                return back()->with('error', 'Stok bahan baku "' . $bahan->nama_bahan . '" tidak mencukupi! Stok tersedia: ' . number_format($stok_sebelum, 2) . ' ' . $bahan->satuan);
+            }
             $stok_sesudah = $stok_sebelum - $request->jumlah;
-            if($stok_sesudah < 0) $stok_sesudah = 0; // Cegah stok minus
         }
 
         // Update Stok Utama

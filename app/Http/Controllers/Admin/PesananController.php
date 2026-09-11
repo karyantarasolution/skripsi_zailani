@@ -53,6 +53,7 @@ class PesananController extends Controller
         }
 
         if (($statusBaru == 'Produksi' || $statusBaru == 'Selesai') && ($statusLama != 'Produksi' && $statusLama != 'Selesai')) {
+            $kebutuhan = [];
             foreach ($pesanan->detailPesanan as $item) {
                 $pembagi = match($item->produk->satuan) {
                     'mm' => 1000,
@@ -61,26 +62,64 @@ class PesananController extends Controller
                 };
                 $luasM2 = ($item->panjang / $pembagi) * ($item->lebar / $pembagi);
                 foreach ($item->produk->bahanBaku as $bahan) {
-                    $penggunaan = ($bahan->pivot->tipe_pengurangan == 'per_meter') 
-                                  ? ($luasM2 * $bahan->pivot->jumlah_digunakan * $item->jumlah) 
+                    $penggunaan = ($bahan->pivot->tipe_pengurangan == 'per_meter')
+                                  ? ($luasM2 * $bahan->pivot->jumlah_digunakan * $item->jumlah)
                                   : ($bahan->pivot->jumlah_digunakan * $item->jumlah);
 
-                    $stok_sebelum = $bahan->stok;
-                    $stok_sesudah = $stok_sebelum - $penggunaan;
-
-                    $bahan->update(['stok' => $stok_sesudah]);
-
-                    RiwayatStok::create([
-                        'bahan_baku_id' => $bahan->id,
-                        'user_id' => auth()->id(),
-                        'jenis' => 'keluar',
-                        'jumlah' => $penggunaan,
-                        'stok_sebelum' => $stok_sebelum,
-                        'stok_sesudah' => $stok_sesudah,
-                        'keterangan' => "Potong Stok Otomatis: " . $pesanan->nomor_invoice
-                    ]);
+                    $bahan->refresh();
+                    $key = $bahan->id;
+                    if (!isset($kebutuhan[$key])) {
+                        $kebutuhan[$key] = [
+                            'nama' => $bahan->nama_bahan,
+                            'stok' => $bahan->stok,
+                            'total' => 0,
+                        ];
+                    }
+                    $kebutuhan[$key]['total'] += $penggunaan;
                 }
             }
+
+            $kurang = [];
+            foreach ($kebutuhan as $kb) {
+                if ($kb['total'] > $kb['stok']) {
+                    $kurang[] = $kb['nama'] . ' (dibutuhkan: ' . number_format($kb['total'], 2) . ', tersedia: ' . number_format($kb['stok'], 2) . ')';
+                }
+            }
+
+            if (!empty($kurang)) {
+                return back()->with('error', 'Stok bahan baku tidak mencukupi! ' . implode('; ', $kurang));
+            }
+
+            DB::transaction(function () use ($pesanan, $kebutuhan) {
+                foreach ($pesanan->detailPesanan as $item) {
+                    $pembagi = match($item->produk->satuan) {
+                        'mm' => 1000,
+                        'cm' => 100,
+                        default => 1,
+                    };
+                    $luasM2 = ($item->panjang / $pembagi) * ($item->lebar / $pembagi);
+                    foreach ($item->produk->bahanBaku as $bahan) {
+                        $penggunaan = ($bahan->pivot->tipe_pengurangan == 'per_meter')
+                                      ? ($luasM2 * $bahan->pivot->jumlah_digunakan * $item->jumlah)
+                                      : ($bahan->pivot->jumlah_digunakan * $item->jumlah);
+
+                        $stok_sebelum = $bahan->stok;
+                        $stok_sesudah = $stok_sebelum - $penggunaan;
+
+                        $bahan->update(['stok' => $stok_sesudah]);
+
+                        RiwayatStok::create([
+                            'bahan_baku_id' => $bahan->id,
+                            'user_id' => auth()->id(),
+                            'jenis' => 'keluar',
+                            'jumlah' => $penggunaan,
+                            'stok_sebelum' => $stok_sebelum,
+                            'stok_sesudah' => $stok_sesudah,
+                            'keterangan' => "Potong Stok Otomatis: " . $pesanan->nomor_invoice
+                        ]);
+                    }
+                }
+            });
         }
 
         if ($statusBaru == 'Dibatalkan' && ($statusLama == 'Produksi' || $statusLama == 'Selesai')) {
